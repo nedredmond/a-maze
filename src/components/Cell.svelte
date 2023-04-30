@@ -1,23 +1,24 @@
 <script>
-	export let n = false,
-		s = false,
-		e = false,
-		w = false;
+	export let top = false,
+		bottom = false,
+		right = false,
+		left = false,
+		borderWidth = 2;
 
-	const borderStyle = '5px solid black';
 	const style = `
-        border-top: 5px solid ${n ? 'transparent' : 'black'};
-        border-right: ${e ? 'none' : borderStyle};
-        border-bottom: ${s ? 'none' : borderStyle};
-        border-left: ${w ? 'none' : borderStyle};
-    `;
+		border-top: ${top ? 'none;' : borderWidth + 'px solid black;'}
+		border-right: ${right ? 'none;' : borderWidth + 'px solid black;'}
+		border-bottom: ${bottom ? 'none;' : borderWidth + 'px solid black;'}
+		border-left: ${left ? 'none;' : borderWidth + 'px solid black;'}
+	`;
 </script>
 
-<div {style} />
+<div {style} class={$$props.class} />
 
 <style>
 	div {
-		height: 75px;
-		width: 75px;
+		box-sizing: border-box;
+		-moz-box-sizing: border-box;
+		-webkit-box-sizing: border-box;
 	}
 </style>

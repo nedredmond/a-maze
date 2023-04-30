@@ -1,18 +1,31 @@
 <script>
-    import Cell from '../components/Cell.svelte';
-    import { generateMaze } from '../utils/maze';
+	import Cell from '../components/Cell.svelte';
+	import { generateMaze } from '../utils/maze';
+	const mazeSize = 50;
 </script>
 
-<style>
-    .row {
-        display: flex;
-    }
-</style>
+<div class="container" style="--maze-size: {mazeSize}">
+	{#each generateMaze(mazeSize, mazeSize).grid as row}
+		{#each row as cell}
+			<Cell class="cell" {...cell} />
+		{/each}
+	{/each}
+</div>
 
-{#each generateMaze(5, 5).grid as row}
-    <div class="row">
-        {#each row as cell}
-            <Cell {...cell}/>
-        {/each}
-    </div>
-{/each}
+<style>
+	.container {
+		display: grid;
+		grid-template-columns: repeat(var(--maze-size), 1fr);
+		gap: 0px;
+		border: 2px solid black;
+	}
+	.container > :global(:first-child) {
+		background-color: greenyellow;
+	}
+	.container > :global(:last-child) {
+		background-color: red;
+	}
+	:global(.cell) {
+		aspect-ratio: 1;
+	}
+</style>

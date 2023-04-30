@@ -1,8 +1,8 @@
 type Cell = {
-	n?: boolean;
-	s?: boolean;
-	e?: boolean;
-	w?: boolean;
+	top?: boolean;
+	bottom?: boolean;
+	right?: boolean;
+	left?: boolean;
 	x: number;
 	y: number;
 	visited?: boolean;
@@ -71,20 +71,20 @@ const removeWall = (grid: Readonly<Grid>, current: Readonly<Cell>, next: Readonl
 	const updatedGrid = [...grid];
 	const { x, y } = current;
 	if (next.x === x - 1) {
-		updatedGrid[y][x].w = true;
-		updatedGrid[next.y][next.x].e = true;
+		updatedGrid[y][x].left = true;
+		updatedGrid[next.y][next.x].right = true;
 	}
 	if (next.x === x + 1) {
-		updatedGrid[y][x].e = true;
-		updatedGrid[next.y][next.x].w = true;
+		updatedGrid[y][x].right = true;
+		updatedGrid[next.y][next.x].left = true;
 	}
 	if (next.y === y - 1) {
-		updatedGrid[y][x].n = true;
-		updatedGrid[next.y][next.x].s = true;
+		updatedGrid[y][x].top = true;
+		updatedGrid[next.y][next.x].bottom = true;
 	}
 	if (next.y === y + 1) {
-		updatedGrid[y][x].s = true;
-		updatedGrid[next.y][next.x].n = true;
+		updatedGrid[y][x].bottom = true;
+		updatedGrid[next.y][next.x].top = true;
 	}
 	updatedGrid[next.y][next.x].visited = true;
 
@@ -138,8 +138,8 @@ if (import.meta.vitest) {
 			const cell = { x: 1, y: 1 };
 			const next = { x: 0, y: 1 };
 			const newGrid = removeWall(grid, cell, next);
-			expect(newGrid[1][1].w).toBe(true);
-			expect(newGrid[1][0].e).toBe(true);
+			expect(newGrid[1][1].left).toBe(true);
+			expect(newGrid[1][0].right).toBe(true);
 			expect(newGrid[1][0].visited).toBeTruthy();
 			expect(newGrid[1][1].visited).toBeFalsy();
 		});
@@ -148,8 +148,8 @@ if (import.meta.vitest) {
 			const cell = { x: 1, y: 1 };
 			const next = { x: 2, y: 1 };
 			const newGrid = removeWall(grid, cell, next);
-			expect(newGrid[1][1].e).toBe(true);
-			expect(newGrid[1][2].w).toBe(true);
+			expect(newGrid[1][1].right).toBe(true);
+			expect(newGrid[1][2].left).toBe(true);
 			expect(newGrid[1][2].visited).toBeTruthy();
 			expect(newGrid[1][1].visited).toBeFalsy();
 		});
