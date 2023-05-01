@@ -16,7 +16,21 @@ export type Maze = {
 	grid: Grid;
 };
 
-export const generateMaze = (width: number, height: number): Maze => {
+export const mazeCellsAsync = (size: number): Promise<Cell[]> =>
+	new Promise((resolve, reject) => {
+		const code = `self.onmessage = e => self.postMessage((
+			${mazeCellsForSize.toString()} ${generateMaze.toString()}).call(...e.data));`,
+			blob = new Blob([code], { type: 'text/javascript' }),
+			worker = new Worker(window.URL.createObjectURL(blob));
+		worker.onmessage = (e) => (resolve(e.data), worker.terminate());
+		worker.onerror = (e) => (reject(e.message), worker.terminate());
+		worker.postMessage([size]);
+	});
+
+export const mazeCellsForSize = (size: number): Cell[] =>
+	generateMaze(size, size).grid.reduce((acc, value) => acc.concat(value), []);
+
+const generateMaze = (width: number, height: number): Maze => {
 	const maze = initializeMaze(width, height);
 
 	const stack: Cell[] = [];
@@ -28,7 +42,7 @@ export const generateMaze = (width: number, height: number): Maze => {
 		if (neighbors.length > 0) {
 			stack.push(current);
 			const next = neighbors[Math.floor(Math.random() * neighbors.length)];
-			maze.grid = removeWall([...maze.grid], current, next);
+			removeWall(maze.grid, current, next); // in-place for performance
 			stack.push(next);
 		}
 	}
@@ -41,7 +55,6 @@ function initializeMaze(width: number, height: number): Maze {
 		grid[i] = new Array<Cell>(width);
 		for (let j = 0; j < width; j++) {
 			grid[i][j] = { x: j, y: i };
-			console.log({ x: j, y: i });
 		}
 	}
 	return {
@@ -67,28 +80,25 @@ function getUnvisitedNeighbors(
 	return neighbors;
 }
 
-const removeWall = (grid: Readonly<Grid>, current: Readonly<Cell>, next: Readonly<Cell>): Grid => {
-	const updatedGrid = [...grid];
+const removeWall = (grid: Grid, current: Readonly<Cell>, next: Readonly<Cell>) => {
 	const { x, y } = current;
 	if (next.x === x - 1) {
-		updatedGrid[y][x].left = true;
-		updatedGrid[next.y][next.x].right = true;
+		grid[y][x].left = true;
+		grid[next.y][next.x].right = true;
 	}
 	if (next.x === x + 1) {
-		updatedGrid[y][x].right = true;
-		updatedGrid[next.y][next.x].left = true;
+		grid[y][x].right = true;
+		grid[next.y][next.x].left = true;
 	}
 	if (next.y === y - 1) {
-		updatedGrid[y][x].top = true;
-		updatedGrid[next.y][next.x].bottom = true;
+		grid[y][x].top = true;
+		grid[next.y][next.x].bottom = true;
 	}
 	if (next.y === y + 1) {
-		updatedGrid[y][x].bottom = true;
-		updatedGrid[next.y][next.x].top = true;
+		grid[y][x].bottom = true;
+		grid[next.y][next.x].top = true;
 	}
-	updatedGrid[next.y][next.x].visited = true;
-
-	return updatedGrid;
+	grid[next.y][next.x].visited = true;
 };
 
 if (import.meta.vitest) {
@@ -137,21 +147,21 @@ if (import.meta.vitest) {
 			const grid = initializeMaze(5, 5).grid;
 			const cell = { x: 1, y: 1 };
 			const next = { x: 0, y: 1 };
-			const newGrid = removeWall(grid, cell, next);
-			expect(newGrid[1][1].left).toBe(true);
-			expect(newGrid[1][0].right).toBe(true);
-			expect(newGrid[1][0].visited).toBeTruthy();
-			expect(newGrid[1][1].visited).toBeFalsy();
+			removeWall(grid, cell, next);
+			expect(grid[1][1].left).toBe(true);
+			expect(grid[1][0].right).toBe(true);
+			expect(grid[1][0].visited).toBeTruthy();
+			expect(grid[1][1].visited).toBeFalsy();
 		});
 		test('with x+1', () => {
 			const grid = initializeMaze(3, 3).grid;
 			const cell = { x: 1, y: 1 };
 			const next = { x: 2, y: 1 };
-			const newGrid = removeWall(grid, cell, next);
-			expect(newGrid[1][1].right).toBe(true);
-			expect(newGrid[1][2].left).toBe(true);
-			expect(newGrid[1][2].visited).toBeTruthy();
-			expect(newGrid[1][1].visited).toBeFalsy();
+			removeWall(grid, cell, next);
+			expect(grid[1][1].right).toBe(true);
+			expect(grid[1][2].left).toBe(true);
+			expect(grid[1][2].visited).toBeTruthy();
+			expect(grid[1][1].visited).toBeFalsy();
 		});
 	});
 	test('generateMaze', () => {

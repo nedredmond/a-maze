@@ -3,7 +3,7 @@
 		bottom = false,
 		right = false,
 		left = false,
-		borderWidth = 2;
+		borderWidth = 1;
 
 	const style = `
 		border-top: ${top ? 'none;' : borderWidth + 'px solid black;'}
@@ -13,12 +13,15 @@
 	`;
 </script>
 
-<div {style} class={$$props.class} />
+<div {style} class={$$props.class}>
+	<slot />
+</div>
 
 <style>
 	div {
 		box-sizing: border-box;
 		-moz-box-sizing: border-box;
 		-webkit-box-sizing: border-box;
+		overflow: hidden;
 	}
 </style>
