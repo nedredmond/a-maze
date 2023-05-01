@@ -16,17 +16,6 @@ export type Maze = {
 	grid: Grid;
 };
 
-export const mazeCellsAsync = (size: number): Promise<Cell[]> =>
-	new Promise((resolve, reject) => {
-		const code = `self.onmessage = e => self.postMessage((
-			${mazeCellsForSize.toString()} ${generateMaze.toString()}).call(...e.data));`,
-			blob = new Blob([code], { type: 'text/javascript' }),
-			worker = new Worker(window.URL.createObjectURL(blob));
-		worker.onmessage = (e) => (resolve(e.data), worker.terminate());
-		worker.onerror = (e) => (reject(e.message), worker.terminate());
-		worker.postMessage([size]);
-	});
-
 export const mazeCellsForSize = (size: number): Cell[] =>
 	generateMaze(size, size).grid.reduce((acc, value) => acc.concat(value), []);
 
