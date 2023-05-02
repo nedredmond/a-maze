@@ -8,7 +8,7 @@
 	name="complexity"
 	id="complexity"
 	min="5"
-	max="100"
+	max="75"
 	step="1"
 	bind:value
 	class="slider"

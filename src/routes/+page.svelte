@@ -26,7 +26,7 @@
 		<div class="maze" style="--maze-size: {size}">
 			{#if DungeonMan}
 				{#await getMaze(size)}
-					{#each { length: size * size } as _, i (i)}
+					{#each { length: size ** 2 } as _, i (i)}
 						<div class="loading-cell" />
 					{/each}
 				{:then cells}
@@ -55,10 +55,10 @@
 		border: 1px solid black;
 	}
 	.maze > :global(:first-child) {
-		background: linear-gradient(to right bottom, lime, 5%, transparent);
+		background: radial-gradient(circle at left top, lime, 5%, transparent);
 	}
 	.maze > :global(:last-child:not(span)) {
-		background: linear-gradient(to left top, red, 5%, transparent);
+		background: radial-gradient(circle at bottom right, red, 5%, transparent);
 	}
 	:global(.cell) {
 		aspect-ratio: 1;
