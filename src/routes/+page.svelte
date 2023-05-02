@@ -25,11 +25,7 @@
 	{#key size}
 		<div class="maze" style="--maze-size: {size}">
 			{#if DungeonMan}
-				{#await getMaze(size)}
-					{#each { length: size * size } as _, i (i)}
-						<div class="loading-cell" />
-					{/each}
-				{:then cells}
+				{#await getMaze(size) then cells}
 					{#each cells as cell, i}
 						<Cell class="cell" {...cell} />
 					{/each}
