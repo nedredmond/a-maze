@@ -2,14 +2,16 @@
 	export let top = false,
 		bottom = false,
 		right = false,
-		left = false,
-		borderWidth = 1;
+		left = false;
+
+	const borderColor = 'black';
+	const borderWidth = 1;
 
 	const style = `
-		border-top: ${top ? 'none;' : borderWidth + 'px solid black;'}
-		border-right: ${right ? 'none;' : borderWidth + 'px solid black;'}
-		border-bottom: ${bottom ? 'none;' : borderWidth + 'px solid black;'}
-		border-left: ${left ? 'none;' : borderWidth + 'px solid black;'}
+		border-top: ${top ? 'none;' : borderWidth + 'px solid ' + borderColor + ';'}
+		border-right: ${right ? 'none;' : borderWidth + 'px solid ' + borderColor + ';'}
+		border-bottom: ${bottom ? 'none;' : borderWidth + 'px solid ' + borderColor + ';'}
+		border-left: ${left ? 'none;' : borderWidth + 'px solid ' + borderColor + ';'}
 	`;
 </script>
 

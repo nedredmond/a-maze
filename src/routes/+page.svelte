@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import Complexity from '../components/Complexity.svelte';
 	import Cell from '../components/Cell.svelte';
 	let DungeonMan: typeof import('../utils/maze.worker?worker');
 
@@ -10,7 +11,8 @@
 			dm.onerror = (error) => (reject(error), dm.terminate());
 			dm.postMessage([size]);
 		});
-	let size = 20;
+
+	let size: number = 20;
 
 	onMount(async () => {
 		DungeonMan = await import('../utils/maze.worker?worker');
@@ -18,31 +20,18 @@
 </script>
 
 <div class="container">
-	<label for="complexity">Maze complexity: {size}x{size}</label>
-	<input
-		type="range"
-		name="complexity"
-		id="complexity"
-		min="5"
-		max="75"
-		step="1"
-		bind:value={size}
-		class="slider"
-	/>
-	<output for="complexity" />
+	<Complexity bind:value={size} />
 
 	{#key size}
 		<div class="maze" style="--maze-size: {size}">
 			{#if DungeonMan}
-				{#await getMaze(size) then cells}
+				{#await getMaze(size)}
+					{#each { length: size * size } as _, i (i)}
+						<div class="loading-cell" />
+					{/each}
+				{:then cells}
 					{#each cells as cell, i}
-						<Cell class="cell" {...cell}>
-							<!-- {#if i === 0}
-								<span class="start">S</span>
-							{:else if i === cells.length - 1}
-								<span class="end">E</span>
-							{/if} -->
-						</Cell>
+						<Cell class="cell" {...cell} />
 					{/each}
 				{:catch error}
 					<p>{error}</p>
@@ -55,7 +44,8 @@
 <style>
 	.container {
 		aspect-ratio: 1/1;
-		width: min(90vw, 90vh);
+		width: min(95vw, 90vh);
+		margin: auto;
 	}
 	.maze {
 		aspect-ratio: 1;
@@ -65,15 +55,15 @@
 		border: 1px solid black;
 	}
 	.maze > :global(:first-child) {
-		background-color: greenyellow;
+		background: linear-gradient(to right bottom, lime, 5%, transparent);
 	}
 	.maze > :global(:last-child:not(span)) {
-		background-color: red;
+		background: linear-gradient(to left top, red, 5%, transparent);
 	}
 	:global(.cell) {
 		aspect-ratio: 1;
 	}
-	.slider {
-		width: 100%;
+	.loading-cell {
+		box-shadow: 0 0 0.5px gray;
 	}
 </style>
