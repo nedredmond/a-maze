@@ -1,14 +1,4 @@
-type Cell = {
-	top?: boolean;
-	bottom?: boolean;
-	right?: boolean;
-	left?: boolean;
-	x: number;
-	y: number;
-	visited?: boolean;
-};
-
-type Grid = Cell[][];
+import type { Cell, Grid } from '../types';
 
 export type Maze = {
 	width: number;
@@ -30,7 +20,7 @@ const generateMaze = (width: number, height: number): Maze => {
 		const neighbors = getUnvisitedNeighbors(maze, current);
 		if (neighbors.length > 0) {
 			stack.push(current);
-			const next = neighbors[Math.floor(Math.random() * neighbors.length)];
+			const next = getNext(neighbors);
 			removeWall(maze.grid, current, next); // in-place for performance
 			stack.push(next);
 		}
@@ -68,6 +58,9 @@ function getUnvisitedNeighbors(
 	if (west && !west.visited) neighbors.push(west);
 	return neighbors;
 }
+
+const getNext = (neighbors: Cell[]): Cell =>
+	neighbors[Math.floor(Math.random() * neighbors.length)];
 
 const removeWall = (grid: Grid, current: Readonly<Cell>, next: Readonly<Cell>) => {
 	const { x, y } = current;

@@ -21,6 +21,7 @@
 
 <style>
 	div {
+		aspect-ratio: 1;
 		box-sizing: border-box;
 		-moz-box-sizing: border-box;
 		-webkit-box-sizing: border-box;

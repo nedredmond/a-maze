@@ -1,8 +1,8 @@
 <script lang="ts">
-	export let value: number;
+	import { size } from '../store';
 </script>
 
-<label for="complexity">Maze complexity: {value}×{value}</label>
+<label for="complexity">Maze complexity: {$size}×{$size}</label>
 <input
 	type="range"
 	name="complexity"
@@ -10,7 +10,7 @@
 	min="5"
 	max="75"
 	step="1"
-	bind:value
+	bind:value={$size}
 	class="slider"
 />
 <output for="complexity" />
