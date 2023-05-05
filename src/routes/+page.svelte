@@ -34,7 +34,7 @@
 						<Cell class="cell" {...cell} />
 					{/each}
 				{:catch error}
-					<p>{error}</p>
+					<p>{error.message}</p>
 				{/await}
 			{/if}
 		</div>
@@ -43,7 +43,6 @@
 
 <style>
 	.container {
-		aspect-ratio: 1/1;
 		width: min(95vw, 90vh);
 		margin: auto;
 	}
@@ -57,11 +56,8 @@
 	.maze > :global(:first-child) {
 		background: radial-gradient(circle at left top, lime, 5%, transparent);
 	}
-	.maze > :global(:last-child:not(span)) {
+	.maze > :global(:last-child) {
 		background: radial-gradient(circle at bottom right, red, 5%, transparent);
-	}
-	:global(.cell) {
-		aspect-ratio: 1;
 	}
 	.loading-cell {
 		box-shadow: 0 0 0.5px gray;
