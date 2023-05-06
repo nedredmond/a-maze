@@ -1,39 +1,42 @@
 <script lang="ts">
-	import { dimensions, area } from '../../store';
+	import { dimensions, area, textMode, textMazeInput } from '../../store';
 	import { onMount } from 'svelte';
 	import Cell from './Cell.svelte';
 	import Gate from './Gate.svelte';
-	import type { Dimensions } from '../../types';
+	import type { MazeInput, Maze } from '../../types';
 
 	let BrickRoad: typeof import('./utils/maze.worker?worker');
 	onMount(async () => {
 		BrickRoad = await import('./utils/maze.worker?worker');
 	});
 
-	const getMaze = (dimensions: Dimensions): Promise<Cell[]> =>
-		new Promise((resolve, reject) => {
+	const getMaze = (input: MazeInput): Promise<Maze> => {
+		console.log(input);
+		return new Promise((resolve, reject) => {
 			const dm = new BrickRoad.default();
 			dm.onmessage = ({ data }) => (resolve(data), dm.terminate());
 			dm.onerror = (error) => (reject(error), dm.terminate());
-			dm.postMessage(dimensions);
+			dm.postMessage(input);
 		});
+	};
 </script>
 
 <div class="maze" style:--maze-size={$dimensions.width}>
 	{#if BrickRoad}
-		{#await getMaze($dimensions)}
+		{#await getMaze($textMode ? $textMazeInput : $dimensions)}
 			{#each { length: $area } as _}
 				<div class="loading-cell" />
 			{/each}
-		{:then cells}
-			{#each cells as cell, i}
+		{:then maze}
+			{(console.log({ maze, $dimensions }), '')}
+			{#each maze.cells as cell, i}
 				{#if i === 0}
 					<Cell {...cell}>
 						<div class="portal entrance">
 							<Gate />
 						</div>
 					</Cell>
-				{:else if i === cells.length - 1}
+				{:else if i === maze.cells.length - 1}
 					<Cell {...cell}>
 						<div class="portal exit">
 							<Gate />

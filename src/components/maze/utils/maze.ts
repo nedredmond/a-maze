@@ -1,16 +1,17 @@
-import type { Cell, Grid } from '../../../types';
+import type { Cell, Dimensions, Grid, Maze, MazeInput, TextMazeInput } from '../../../types';
+import { Alphabet, reAlphabet } from './alphabet';
 
-export type Maze = {
-	width: number;
-	height: number;
-	grid: Grid;
-};
+const PADDING = 3;
+const LETTER_GAP = 1;
+const LINE_GAP = 2;
 
-export const mazeCellsForSize = ({ width, height }: { width: number; height: number }): Cell[] =>
-	generateMaze(width, height).grid.reduce((acc, value) => acc.concat(value), []);
-
-const generateMaze = (width: number, height: number): Maze => {
-	const maze = initializeMaze(width, height);
+export const generateMaze = (input: MazeInput): Maze => {
+	let maze: Maze;
+	if ('lines' in input) {
+		maze = initializeMazeFromText(input);
+	} else {
+		maze = initializeMaze(input);
+	}
 
 	const stack: Cell[] = [];
 	maze.grid[0][0].visited = true;
@@ -25,10 +26,15 @@ const generateMaze = (width: number, height: number): Maze => {
 			stack.push(next);
 		}
 	}
-	return maze;
+	return {
+		...maze,
+		cells: maze.grid.flat(),
+	};
 };
 
-function initializeMaze(width: number, height: number): Maze {
+function initializeMaze(dimensions: Dimensions): Maze {
+	const { height, width } = dimensions;
+
 	const grid = new Array<Cell[]>(height);
 	for (let i = 0; i < height; i++) {
 		grid[i] = new Array<Cell>(width);
@@ -37,14 +43,57 @@ function initializeMaze(width: number, height: number): Maze {
 		}
 	}
 	return {
-		width,
-		height,
+		dimensions,
 		grid,
+		cells: grid.flat(),
 	};
 }
 
+function initializeMazeFromText({ dimensions, lines }: TextMazeInput): Maze {
+	const grid = initializeMaze(dimensions).grid;
+
+	const yStart = PADDING;
+	const xStart = PADDING;
+
+	for (let i = 0; i < lines.length; i++) {
+		const line = lines[i];
+		const y = yStart + i * 5 + i * LINE_GAP;
+		for (let j = 0; j < line.length; j++) {
+			const letter = Alphabet[line[j]];
+			const x = xStart + j * 5 + j * LETTER_GAP;
+			for (let k = 0; k < letter.length; k++) {
+				for (let l = 0; l < letter[k].length; l++) {
+					const current = grid[y + k][x + l];
+					grid[y + k][x + l] = { ...letter[k][l], ...current };
+					console.log(grid[y + k][x + l]);
+				}
+			}
+		}
+	}
+
+	return {
+		dimensions,
+		grid,
+		cells: grid.flat(),
+	};
+}
+
+export const getLines = (input: string): string[] =>
+	input.replace(reAlphabet, '').toUpperCase().split('\n');
+
+export const getTextMazeDimensions = (lines: string[]): Dimensions => {
+	const longestLineLength = lines.reduce((acc, line) => Math.max(acc, line.length), 0);
+
+	// get height from number of lines
+	const height = lines.length * 5 + PADDING * 2 + LINE_GAP * (lines.length - 1);
+	// get width from longest line
+	const width = longestLineLength * 5 + PADDING * 2 + LETTER_GAP * (longestLineLength - 1);
+
+	return { width, height };
+};
+
 function getUnvisitedNeighbors(
-	{ grid, height, width }: Readonly<Maze>,
+	{ grid, dimensions: { height, width } }: Readonly<Maze>,
 	{ x, y }: Readonly<Cell>,
 ): Cell[] {
 	const neighbors: Cell[] = [];
@@ -52,12 +101,14 @@ function getUnvisitedNeighbors(
 	const south = y < height - 1 ? grid[y + 1][x] : undefined;
 	const east = x < width - 1 ? grid[y][x + 1] : undefined;
 	const west = x > 0 ? grid[y][x - 1] : undefined;
-	if (north && !north.visited) neighbors.push(north);
-	if (south && !south.visited) neighbors.push(south);
-	if (east && !east.visited) neighbors.push(east);
-	if (west && !west.visited) neighbors.push(west);
+	if (isVisitable(north)) neighbors.push(north!);
+	if (isVisitable(south)) neighbors.push(south!);
+	if (isVisitable(east)) neighbors.push(east!);
+	if (isVisitable(west)) neighbors.push(west!);
 	return neighbors;
 }
+
+const isVisitable = (cell: Cell | undefined): boolean => !!cell && !cell.visited && !cell.fill;
 
 const getNext = (neighbors: Cell[]): Cell =>
 	neighbors[Math.floor(Math.random() * neighbors.length)];
@@ -86,17 +137,20 @@ const removeWall = (grid: Grid, current: Readonly<Cell>, next: Readonly<Cell>) =
 if (import.meta.vitest) {
 	const { describe, test, expect } = import.meta.vitest;
 	test('initializeMaze', () => {
-		const maze = initializeMaze(4, 2);
-		expect(maze.width).toBe(4);
-		expect(maze.height).toBe(2);
+		const maze = initializeMaze({ width: 4, height: 2 });
+		expect(maze.dimensions.width).toBe(4);
+		expect(maze.dimensions.height).toBe(2);
 		expect(maze.grid.length).toBe(2);
 		expect(maze.grid[0].length).toBe(4);
 	});
 	describe(`getNeighbors`, () => {
 		test('with none visited', () => {
-			const grid = initializeMaze(5, 5).grid;
+			const grid = initializeMaze({ width: 5, height: 5 }).grid;
 			const cell = { x: 1, y: 1 };
-			const neighbors = getUnvisitedNeighbors({ grid: grid, height: 5, width: 5 }, cell);
+			const neighbors = getUnvisitedNeighbors(
+				{ grid: grid, dimensions: { height: 5, width: 5 }, cells: [] },
+				cell,
+			);
 			const expected = [
 				{ x: 1, y: 0 },
 				{ x: 1, y: 2 },
@@ -112,11 +166,14 @@ if (import.meta.vitest) {
 			expect(neighbors.sort(sortFunc)).toEqual(expected.sort(sortFunc));
 		});
 		test('with some visited', () => {
-			const grid = initializeMaze(5, 5).grid;
+			const grid = initializeMaze({ width: 5, height: 5 }).grid;
 			grid[0][1].visited = true;
 			grid[1][0].visited = true;
 			const cell = { x: 1, y: 1 };
-			const neighbors = getUnvisitedNeighbors({ grid: grid, height: 5, width: 5 }, cell);
+			const neighbors = getUnvisitedNeighbors(
+				{ grid: grid, dimensions: { height: 5, width: 5 }, cells: [] },
+				cell,
+			);
 			const expected = [
 				{ x: 1, y: 2 },
 				{ x: 2, y: 1 },
@@ -126,7 +183,7 @@ if (import.meta.vitest) {
 	});
 	describe(`removeWall`, () => {
 		test('with x-1', () => {
-			const grid = initializeMaze(5, 5).grid;
+			const grid = initializeMaze({ width: 5, height: 5 }).grid;
 			const cell = { x: 1, y: 1 };
 			const next = { x: 0, y: 1 };
 			removeWall(grid, cell, next);
@@ -136,7 +193,7 @@ if (import.meta.vitest) {
 			expect(grid[1][1].visited).toBeFalsy();
 		});
 		test('with x+1', () => {
-			const grid = initializeMaze(3, 3).grid;
+			const grid = initializeMaze({ width: 3, height: 3 }).grid;
 			const cell = { x: 1, y: 1 };
 			const next = { x: 2, y: 1 };
 			removeWall(grid, cell, next);
@@ -147,9 +204,9 @@ if (import.meta.vitest) {
 		});
 	});
 	test('generateMaze', () => {
-		const maze = generateMaze(5, 5);
-		expect(maze.width).toBe(5);
-		expect(maze.height).toBe(5);
+		const maze = generateMaze({ width: 5, height: 5 });
+		expect(maze.dimensions.width).toBe(5);
+		expect(maze.dimensions.height).toBe(5);
 		expect(maze.grid.length).toBe(5);
 		expect(maze.grid[0].length).toBe(5);
 	});

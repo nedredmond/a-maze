@@ -1,6 +1,6 @@
 /// <reference lib="webworker" />
 declare const self: DedicatedWorkerGlobalScope;
 
-import { mazeCellsForSize } from './maze';
+import { generateMaze } from './maze';
 
-self.onmessage = ({ data }) => self.postMessage(mazeCellsForSize(data));
+self.onmessage = ({ data }) => self.postMessage(generateMaze(data));
