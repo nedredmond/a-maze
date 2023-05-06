@@ -2,11 +2,14 @@
 	import { size } from '../store';
 	import { onMount } from 'svelte';
 	import Cell from '../components/Cell.svelte';
+	import Gate from './Gate.svelte';
 
+	// this is an Earthbound reference
 	let BrickRoad: typeof import('../utils/maze.worker?worker');
 	onMount(async () => {
 		BrickRoad = await import('../utils/maze.worker?worker');
 	});
+
 	const getMaze = (size: number): Promise<Cell[]> =>
 		new Promise((resolve, reject) => {
 			const dm = new BrickRoad.default();
@@ -24,8 +27,22 @@
 					<div class="loading-cell" />
 				{/each}
 			{:then cells}
-				{#each cells as cell}
-					<Cell class="cell" {...cell} />
+				{#each cells as cell, i}
+					{#if i === 0}
+						<Cell {...cell}>
+							<div class="egress entrance">
+								<Gate />
+							</div>
+						</Cell>
+					{:else if i === cells.length - 1}
+						<Cell {...cell}>
+							<div class="egress exit">
+								<Gate />
+							</div>
+						</Cell>
+					{:else}
+						<Cell {...cell} />
+					{/if}
 				{/each}
 			{:catch error}
 				<p>{error}</p>
@@ -45,10 +62,16 @@
 		gap: 0px;
 		border: 1px solid black;
 	}
-	.maze > :global(:first-child) {
-		background: radial-gradient(circle at left top, lime, 5%, transparent);
+	.egress {
+		width: 100%;
+		height: 100%;
+		position: absolute;
+		background-color: white;
 	}
-	.maze > :global(:last-child:not(span)) {
-		background: radial-gradient(circle at bottom right, red, 5%, transparent);
+	.entrance {
+		right: 75%;
+	}
+	.exit {
+		left: 75%;
 	}
 </style>

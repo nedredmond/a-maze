@@ -1,4 +1,5 @@
 <script>
+	// false means there is a border
 	export let top = false,
 		bottom = false,
 		right = false,
@@ -25,6 +26,6 @@
 		box-sizing: border-box;
 		-moz-box-sizing: border-box;
 		-webkit-box-sizing: border-box;
-		overflow: hidden;
+		position: relative;
 	}
 </style>

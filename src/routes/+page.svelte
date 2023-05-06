@@ -14,7 +14,7 @@
 
 <style>
 	.container {
-		width: min(95vw, 90vh);
+		width: min(75vw, 90vh);
 		height: auto;
 		box-sizing: border-box;
 		aspect-ratio: 1/1;
