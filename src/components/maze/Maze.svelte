@@ -1,54 +1,53 @@
 <script lang="ts">
-	import { width, height } from '../../store';
+	import { dimensions, area } from '../../store';
 	import { onMount } from 'svelte';
 	import Cell from './Cell.svelte';
 	import Gate from './Gate.svelte';
+	import type { Dimensions } from '../../types';
 
 	let BrickRoad: typeof import('./utils/maze.worker?worker');
 	onMount(async () => {
 		BrickRoad = await import('./utils/maze.worker?worker');
 	});
 
-	const getMaze = (width: number, height: number): Promise<Cell[]> =>
+	const getMaze = (dimensions: Dimensions): Promise<Cell[]> =>
 		new Promise((resolve, reject) => {
 			const dm = new BrickRoad.default();
 			dm.onmessage = ({ data }) => (resolve(data), dm.terminate());
 			dm.onerror = (error) => (reject(error), dm.terminate());
-			dm.postMessage({ width, height });
+			dm.postMessage(dimensions);
 		});
 </script>
 
-{#key $width * $height}
-	<div class="maze" style:--maze-size={$width}>
-		{#if BrickRoad}
-			{#await getMaze($width, $height)}
-				{#each { length: $width * $height } as _}
-					<div class="loading-cell" />
-				{/each}
-			{:then cells}
-				{#each cells as cell, i}
-					{#if i === 0}
-						<Cell {...cell}>
-							<div class="portal entrance">
-								<Gate />
-							</div>
-						</Cell>
-					{:else if i === cells.length - 1}
-						<Cell {...cell}>
-							<div class="portal exit">
-								<Gate />
-							</div>
-						</Cell>
-					{:else}
-						<Cell {...cell} />
-					{/if}
-				{/each}
-			{:catch e}
-				<p>{e.message}</p>
-			{/await}
-		{/if}
-	</div>
-{/key}
+<div class="maze" style:--maze-size={$dimensions.width}>
+	{#if BrickRoad}
+		{#await getMaze($dimensions)}
+			{#each { length: $area } as _}
+				<div class="loading-cell" />
+			{/each}
+		{:then cells}
+			{#each cells as cell, i}
+				{#if i === 0}
+					<Cell {...cell}>
+						<div class="portal entrance">
+							<Gate />
+						</div>
+					</Cell>
+				{:else if i === cells.length - 1}
+					<Cell {...cell}>
+						<div class="portal exit">
+							<Gate />
+						</div>
+					</Cell>
+				{:else}
+					<Cell {...cell} />
+				{/if}
+			{/each}
+		{:catch e}
+			<p>{e.message}</p>
+		{/await}
+	{/if}
+</div>
 
 <style>
 	.loading-cell {

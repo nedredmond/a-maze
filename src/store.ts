@@ -1,4 +1,8 @@
-import { writable } from 'svelte/store';
+import { derived, writable } from 'svelte/store';
+import type { Dimensions } from './types';
 
-export const height = writable(20);
-export const width = writable(20);
+export const dimensions = writable({ height: 20, width: 20 });
+export const area = derived(
+	dimensions,
+	($dimensions: Dimensions) => $dimensions.height * $dimensions.width,
+);

@@ -10,6 +10,7 @@ export type Cell = {
 
 export type Grid = Cell[][];
 
-export interface Settings {
-	[style: string]: boolean;
+export interface Dimensions {
+	height: number;
+	width: number;
 }
