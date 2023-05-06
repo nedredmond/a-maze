@@ -9,7 +9,7 @@ export const area = derived(
 );
 
 export const textMode = writable(false);
-export const text = writable('Hello world!');
+export const text = writable(`Hello\nworld!`);
 
 export const textMazeInput = derived(text, ($text: string) => {
 	const lines = getLines($text);
