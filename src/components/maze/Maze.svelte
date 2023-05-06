@@ -1,42 +1,41 @@
 <script lang="ts">
-	import { size } from '../store';
+	import { width, height } from '../../store';
 	import { onMount } from 'svelte';
-	import Cell from '../components/Cell.svelte';
+	import Cell from './Cell.svelte';
 	import Gate from './Gate.svelte';
 
-	// this is an Earthbound reference
-	let BrickRoad: typeof import('../utils/maze.worker?worker');
+	let BrickRoad: typeof import('./utils/maze.worker?worker');
 	onMount(async () => {
-		BrickRoad = await import('../utils/maze.worker?worker');
+		BrickRoad = await import('./utils/maze.worker?worker');
 	});
 
-	const getMaze = (size: number): Promise<Cell[]> =>
+	const getMaze = (width: number, height: number): Promise<Cell[]> =>
 		new Promise((resolve, reject) => {
 			const dm = new BrickRoad.default();
 			dm.onmessage = ({ data }) => (resolve(data), dm.terminate());
 			dm.onerror = (error) => (reject(error), dm.terminate());
-			dm.postMessage([size]);
+			dm.postMessage({ width, height });
 		});
 </script>
 
-{#key $size}
-	<div class="maze" style:--maze-size={$size}>
+{#key $width * $height}
+	<div class="maze" style:--maze-size={$width}>
 		{#if BrickRoad}
-			{#await getMaze($size)}
-				{#each { length: $size ** 2 } as _}
+			{#await getMaze($width, $height)}
+				{#each { length: $width * $height } as _}
 					<div class="loading-cell" />
 				{/each}
 			{:then cells}
 				{#each cells as cell, i}
 					{#if i === 0}
 						<Cell {...cell}>
-							<div class="egress entrance">
+							<div class="portal entrance">
 								<Gate />
 							</div>
 						</Cell>
 					{:else if i === cells.length - 1}
 						<Cell {...cell}>
-							<div class="egress exit">
+							<div class="portal exit">
 								<Gate />
 							</div>
 						</Cell>
@@ -44,8 +43,8 @@
 						<Cell {...cell} />
 					{/if}
 				{/each}
-			{:catch error}
-				<p>{error}</p>
+			{:catch e}
+				<p>{e.message}</p>
 			{/await}
 		{/if}
 	</div>
@@ -53,16 +52,16 @@
 
 <style>
 	.loading-cell {
+		aspect-ratio: 1;
 		box-shadow: 0 0 0.5px gray;
 	}
 	.maze {
-		aspect-ratio: 1;
 		display: grid;
 		grid-template-columns: repeat(var(--maze-size), 1fr);
 		gap: 0px;
 		border: 1px solid black;
 	}
-	.egress {
+	.portal {
 		width: 100%;
 		height: 100%;
 		position: absolute;

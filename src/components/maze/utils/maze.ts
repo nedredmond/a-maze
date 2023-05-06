@@ -1,4 +1,4 @@
-import type { Cell, Grid } from '../types';
+import type { Cell, Grid } from '../../../types';
 
 export type Maze = {
 	width: number;
@@ -6,8 +6,8 @@ export type Maze = {
 	grid: Grid;
 };
 
-export const mazeCellsForSize = (size: number): Cell[] =>
-	generateMaze(size, size).grid.reduce((acc, value) => acc.concat(value), []);
+export const mazeCellsForSize = ({ width, height }: { width: number; height: number }): Cell[] =>
+	generateMaze(width, height).grid.reduce((acc, value) => acc.concat(value), []);
 
 const generateMaze = (width: number, height: number): Maze => {
 	const maze = initializeMaze(width, height);

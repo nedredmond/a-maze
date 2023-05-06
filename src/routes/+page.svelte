@@ -1,6 +1,6 @@
 <script lang="ts">
-	import Complexity from '../components/Complexity.svelte';
-	import Maze from '../components/Maze.svelte';
+	import Controls from '../components/Controls.svelte';
+	import Maze from '../components/maze/Maze.svelte';
 </script>
 
 <svelte:head>
@@ -8,16 +8,15 @@
 </svelte:head>
 
 <div class="container">
-	<Complexity />
+	<Controls />
 	<Maze />
 </div>
 
 <style>
 	.container {
-		width: min(75vw, 90vh);
-		height: auto;
+		width: 90vw;
+		max-width: 550px;
 		box-sizing: border-box;
-		aspect-ratio: 1/1;
 		margin: auto;
 	}
 </style>
