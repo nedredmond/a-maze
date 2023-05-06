@@ -25,5 +25,6 @@
 	}
 	:global(body) {
 		font-family: sans-serif;
+		accent-color: blueviolet;
 	}
 </style>

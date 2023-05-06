@@ -2,15 +2,20 @@
 	import { dimensions, textMode, text } from '../../store';
 	import Refresh from './Refresh.svelte';
 	import TextMode from './TextMode.svelte';
+	import { MAX_SIZE, MIN_SIZE, clampDimensions } from './utils';
 
 	const refresh = () => {
-		$dimensions = { ...$dimensions };
-		$text = $text;
+		if ($textMode) {
+			$text = $text;
+		} else {
+			$dimensions = clampDimensions($dimensions);
+		}
 	};
 	const toggleTextMode = () => {
 		$textMode = !$textMode;
+		refresh();
 	};
-	const getStatus = (value: boolean) => (value ? 'On' : 'Off');
+	const textModeToggleLabel = () => ($textMode ? 'Exit' : 'Enter') + ' Text Mode';
 </script>
 
 <div class="controls outer">
@@ -30,9 +35,9 @@
 				on:click={toggleTextMode}
 				role="switch"
 				aria-checked={$textMode}
-				class="button"
-				aria-label={'Turn ' + getStatus(!$textMode) + ' Text Mode'}
-				title={'Turn ' + getStatus(!$textMode) + ' Text Mode'}
+				class={'button' + ($textMode ? ' active' : '')}
+				aria-label={textModeToggleLabel()}
+				title={textModeToggleLabel()}
 			>
 				<TextMode />
 			</button>
@@ -54,8 +59,8 @@
 				type="range"
 				name="width"
 				id="width"
-				min="5"
-				max="75"
+				min={MIN_SIZE}
+				max={MAX_SIZE}
 				step="1"
 				bind:value={$dimensions.width}
 				class="slider"
@@ -65,8 +70,8 @@
 				type="range"
 				name="height"
 				id="height"
-				min="5"
-				max="75"
+				min={MIN_SIZE}
+				max={MAX_SIZE}
 				step="1"
 				bind:value={$dimensions.height}
 				class="slider"
@@ -103,5 +108,8 @@
 		font: inherit;
 		cursor: pointer;
 		outline: inherit;
+	}
+	.active {
+		color: blueviolet;
 	}
 </style>

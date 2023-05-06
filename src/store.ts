@@ -14,7 +14,7 @@ export const text = writable('Hello world!');
 export const textMazeInput = derived(text, ($text: string) => {
 	const lines = getLines($text);
 	const textMazeDimensions = getTextMazeDimensions(lines);
-	dimensions.set(textMazeDimensions);
+	textMode.subscribe((mode) => mode && dimensions.set(textMazeDimensions));
 	return {
 		lines,
 		dimensions: textMazeDimensions,
