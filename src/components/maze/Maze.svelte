@@ -2,7 +2,7 @@
 	import { dimensions, area, textMode, textMazeInput } from '../../store';
 	import { onMount } from 'svelte';
 	import Cell from './Cell.svelte';
-	import Gate from './Gate.svelte';
+	import Gate from './svg/Gate.svelte';
 	import type { MazeInput, Maze } from '../../types';
 
 	let BrickRoad: typeof import('./utils/maze.worker?worker');
@@ -11,7 +11,6 @@
 	});
 
 	const getMaze = (input: MazeInput): Promise<Maze> => {
-		console.log(input);
 		return new Promise((resolve, reject) => {
 			const dm = new BrickRoad.default();
 			dm.onmessage = ({ data }) => (resolve(data), dm.terminate());
@@ -21,14 +20,13 @@
 	};
 </script>
 
-<div class="maze" style:--maze-size={$dimensions.width}>
+<div id="maze" class="maze" style:--maze-size={$dimensions.width}>
 	{#if BrickRoad}
 		{#await getMaze($textMode ? $textMazeInput : $dimensions)}
 			{#each { length: $area } as _}
 				<div class="loading-cell" />
 			{/each}
 		{:then maze}
-			{(console.log({ maze, $dimensions }), '')}
 			{#each maze.cells as cell, i}
 				{#if i === 0}
 					<Cell {...cell}>

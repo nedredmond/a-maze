@@ -7,6 +7,10 @@ export const area = derived(
 	dimensions,
 	($dimensions: Dimensions) => $dimensions.height * $dimensions.width,
 );
+export const orientation = derived<Writable<Dimensions>, 'portrait' | 'landscape'>(
+	dimensions,
+	($dimensions: Dimensions) => ($dimensions.height > $dimensions.width ? 'portrait' : 'landscape'),
+);
 
 export const textMode = writable(false);
 export const text = writable(`Hello\nworld!`);

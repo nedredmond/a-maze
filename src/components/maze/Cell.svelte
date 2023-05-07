@@ -26,10 +26,12 @@
 
 <style>
 	div {
-		aspect-ratio: 1;
-		box-sizing: border-box;
 		-moz-box-sizing: border-box;
 		-webkit-box-sizing: border-box;
+		-webkit-print-color-adjust: exact !important;
+		aspect-ratio: 1;
+		box-sizing: border-box;
 		position: relative;
+		print-color-adjust: exact !important;
 	}
 </style>

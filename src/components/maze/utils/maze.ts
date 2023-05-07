@@ -65,7 +65,6 @@ function initializeMazeFromText({ dimensions, lines }: TextMazeInput): Maze {
 				for (let l = 0; l < letter[k].length; l++) {
 					const current = grid[y + k][x + l];
 					grid[y + k][x + l] = { ...letter[k][l], ...current };
-					console.log(grid[y + k][x + l]);
 				}
 			}
 		}

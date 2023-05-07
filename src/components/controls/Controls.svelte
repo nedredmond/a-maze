@@ -1,7 +1,8 @@
 <script lang="ts">
 	import { dimensions, textMode, text } from '../../store';
-	import Refresh from './Refresh.svelte';
-	import TextMode from './TextMode.svelte';
+	import Refresh from './svg/Refresh.svelte';
+	import TextMode from './svg/TextMode.svelte';
+	import Print from './svg/Print.svelte';
 	import { MAX_SIZE, MIN_SIZE, clampDimensions } from './utils';
 
 	const refresh = () => {
@@ -18,7 +19,7 @@
 	const textModeToggleLabel = () => ($textMode ? 'Exit' : 'Enter') + ' Text Mode';
 </script>
 
-<div class="controls outer">
+<div id="controls" class="controls outer">
 	<div class="row">
 		{#if $textMode}
 			<label for="text">Enter maze text: </label>
@@ -31,6 +32,14 @@
 			</span>
 		{/if}
 		<div class="row">
+			<button
+				on:click={() => window.print()}
+				class={'button'}
+				aria-label={'Print Maze'}
+				title={'Print Maze'}
+			>
+				<Print />
+			</button>
 			<button
 				on:click={toggleTextMode}
 				role="switch"
@@ -82,6 +91,11 @@
 </div>
 
 <style>
+	@media print {
+		#controls {
+			display: none !important;
+		}
+	}
 	.controls {
 		display: flex;
 		flex-direction: column;
