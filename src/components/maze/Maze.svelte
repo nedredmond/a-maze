@@ -1,31 +1,34 @@
 <script lang="ts">
-	import { dimensions, area, isTextMode, textMazeInput } from '../../store';
+	import { dimensions, isTextMode, textMazeInput } from '../../store';
 	import { onMount } from 'svelte';
 	import Cell from './Cell.svelte';
 	import Gate from './svg/Gate.svelte';
 	import type { MazeInput, Maze } from '../../types';
+	import { debounce } from './utils/debounce';
+	import Placeholder from './Placeholder.svelte';
 
-	let BrickRoad: typeof import('./utils/maze.worker?worker');
+	let Worker: typeof import('./utils/maze.worker?worker');
 	onMount(async () => {
-		BrickRoad = await import('./utils/maze.worker?worker');
+		Worker = await import('./utils/maze.worker?worker');
 	});
-
-	const getMaze = (input: MazeInput): Promise<Maze> => {
-		return new Promise((resolve, reject) => {
-			const dm = new BrickRoad.default();
-			dm.onmessage = ({ data }) => (resolve(data), dm.terminate());
-			dm.onerror = (error) => (reject(error), dm.terminate());
-			dm.postMessage(input);
+	const buildMaze = (input: MazeInput): Promise<Maze> =>
+		new Promise<Maze>((resolve, reject) => {
+			console.log('here');
+			const brickRoad = new Worker.default();
+			brickRoad.onmessage = ({ data }) => (
+				console.log({ data }), resolve(data), brickRoad.terminate()
+			);
+			brickRoad.onerror = (error) => (reject(error), brickRoad.terminate());
+			brickRoad.postMessage(input);
 		});
-	};
+
+	const getMaze = debounce<typeof buildMaze>(buildMaze, 100);
 </script>
 
 <div id="maze" class="maze" style:--maze-size={$dimensions.width}>
-	{#if BrickRoad}
+	{#if Worker}
 		{#await getMaze($isTextMode ? $textMazeInput : $dimensions)}
-			{#each { length: $area } as _}
-				<div class="loading-cell" />
-			{/each}
+			<Placeholder />
 		{:then maze}
 			{#each maze.cells as cell, i}
 				{#if i === 0}
@@ -47,14 +50,12 @@
 		{:catch e}
 			<p>{e.message}</p>
 		{/await}
+	{:else}
+		<Placeholder />
 	{/if}
 </div>
 
 <style>
-	.loading-cell {
-		aspect-ratio: 1;
-		box-shadow: 0 0 0.5px gray;
-	}
 	.maze {
 		display: grid;
 		grid-template-columns: repeat(var(--maze-size), 1fr);
