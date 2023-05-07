@@ -9,13 +9,15 @@
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
 		"test": "vitest",
-		"lint": "prettier --plugin-search-dir . --check . && eslint .",
+		"lint": "pnpm format && prettier --plugin-search-dir . --check . && eslint . --fix",
 		"format": "prettier --plugin-search-dir . --write ."
 	},
 	"devDependencies": {
 		"@sveltejs/adapter-auto": "^2.0.0",
 		"@sveltejs/adapter-static": "^2.0.2",
 		"@sveltejs/kit": "^1.5.0",
+		"@types/node": "^20.1.0",
+		"@types/qrcode": "^1.5.0",
 		"@typescript-eslint/eslint-plugin": "^5.45.0",
 		"@typescript-eslint/parser": "^5.45.0",
 		"eslint": "^8.28.0",
@@ -30,5 +32,8 @@
 		"vite": "^4.3.0",
 		"vitest": "^0.25.3"
 	},
-	"type": "module"
+	"type": "module",
+	"dependencies": {
+		"qrcode": "^1.5.3"
+	}
 }

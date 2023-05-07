@@ -1,27 +1,28 @@
 <script lang="ts">
-	import { dimensions, textMode, text } from '../../store';
-	import Refresh from './svg/Refresh.svelte';
-	import TextMode from './svg/TextMode.svelte';
-	import Print from './svg/Print.svelte';
+	import { dimensions, isTextMode, text } from '../../store';
 	import { MAX_SIZE, MIN_SIZE, clampDimensions } from './utils';
+	import TextModeSvg from './svg/TextModeSVG.svelte';
+	import PrintSvg from './svg/PrintSVG.svelte';
+	import RefreshSvg from './svg/RefreshSVG.svelte';
 
 	const refresh = () => {
-		if ($textMode) {
-			$text = $text;
+		if ($isTextMode) {
+			$text = $text + '';
 		} else {
 			$dimensions = clampDimensions($dimensions);
 		}
 	};
 	const toggleTextMode = () => {
-		$textMode = !$textMode;
+		$isTextMode = !$isTextMode;
 		refresh();
 	};
-	const textModeToggleLabel = () => ($textMode ? 'Exit' : 'Enter') + ' Text Mode';
+	const textModeToggleLabel = (inTextMode: boolean) =>
+		(inTextMode ? 'Exit' : 'Enter') + ' Text Mode';
 </script>
 
 <div id="controls" class="controls outer">
 	<div class="row">
-		{#if $textMode}
+		{#if $isTextMode}
 			<label for="text">Enter maze text: </label>
 		{:else}
 			<span>
@@ -33,22 +34,22 @@
 		{/if}
 		<div class="row">
 			<button
-				on:click={() => window.print()}
-				class={'button'}
-				aria-label={'Print Maze'}
-				title={'Print Maze'}
-			>
-				<Print />
-			</button>
-			<button
 				on:click={toggleTextMode}
 				role="switch"
-				aria-checked={$textMode}
-				class={'button' + ($textMode ? ' active' : '')}
-				aria-label={textModeToggleLabel()}
-				title={textModeToggleLabel()}
+				aria-checked={$isTextMode}
+				class={'button' + ($isTextMode ? ' active' : '')}
+				aria-label={textModeToggleLabel($isTextMode)}
+				title={textModeToggleLabel($isTextMode)}
 			>
-				<TextMode />
+				<TextModeSvg />
+			</button>
+			<button
+				on:click={() => window.print()}
+				class={'button'}
+				aria-label={'Print or Download Maze'}
+				title={'Print or Download Maze'}
+			>
+				<PrintSvg />
 			</button>
 			<button
 				on:click={refresh}
@@ -56,11 +57,11 @@
 				aria-label="Regenerate Maze"
 				title="Regenerate Maze"
 			>
-				<Refresh />
+				<RefreshSvg />
 			</button>
 		</div>
 	</div>
-	{#if $textMode}
+	{#if $isTextMode}
 		<textarea bind:value={$text} rows="2" cols="30" aria-label="maze text" id="text" />
 	{:else}
 		<div class="controls">

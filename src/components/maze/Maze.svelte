@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { dimensions, area, textMode, textMazeInput } from '../../store';
+	import { dimensions, area, isTextMode, textMazeInput } from '../../store';
 	import { onMount } from 'svelte';
 	import Cell from './Cell.svelte';
 	import Gate from './svg/Gate.svelte';
@@ -22,7 +22,7 @@
 
 <div id="maze" class="maze" style:--maze-size={$dimensions.width}>
 	{#if BrickRoad}
-		{#await getMaze($textMode ? $textMazeInput : $dimensions)}
+		{#await getMaze($isTextMode ? $textMazeInput : $dimensions)}
 			{#each { length: $area } as _}
 				<div class="loading-cell" />
 			{/each}

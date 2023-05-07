@@ -12,13 +12,13 @@ export const orientation = derived<Writable<Dimensions>, 'portrait' | 'landscape
 	($dimensions: Dimensions) => ($dimensions.height > $dimensions.width ? 'portrait' : 'landscape'),
 );
 
-export const textMode = writable(false);
+export const isTextMode = writable(false);
 export const text = writable(`Hello\nworld!`);
 
 export const textMazeInput = derived<Writable<string>, TextMazeInput>(text, ($text: string) => {
 	const lines = getLines($text);
 	const textMazeDimensions = getTextMazeDimensions(lines);
-	textMode.subscribe((mode) => mode && dimensions.set(textMazeDimensions));
+	isTextMode.subscribe((mode) => mode && dimensions.set(textMazeDimensions));
 	return {
 		lines,
 		dimensions: textMazeDimensions,

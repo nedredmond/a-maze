@@ -27,6 +27,6 @@ export type MazeInput = Dimensions | TextMazeInput;
 export type TextMazeInput = {
 	lines: string[];
 	dimensions: Dimensions;
-}
+};
 
 export type Fill = 'black' | 'white' | null;
