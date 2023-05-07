@@ -14,7 +14,6 @@
 				$text = decodeURI(encoded);
 			}
 		}
-		console.log(urlParams.toString());
 	});
 </script>
 

@@ -5,15 +5,11 @@ export const debounce = <F extends (...args: Parameters<F>) => ReturnType<F>>(
 ) => {
 	let timeout: NodeJS.Timeout | number = 0;
 
-	console.log('test');
-
 	const debounced = (...args: Parameters<F>) =>
 		new Promise((resolve) => {
 			clearTimeout(timeout);
 			timeout = setTimeout(() => resolve(func(...args)), waitFor);
 		});
-
-	console.log('sup');
 
 	return debounced as (...args: Parameters<F>) => ReturnType<F>;
 };

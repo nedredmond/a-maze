@@ -13,11 +13,8 @@
 	});
 	const buildMaze = (input: MazeInput): Promise<Maze> =>
 		new Promise<Maze>((resolve, reject) => {
-			console.log('here');
 			const brickRoad = new Worker.default();
-			brickRoad.onmessage = ({ data }) => (
-				console.log({ data }), resolve(data), brickRoad.terminate()
-			);
+			brickRoad.onmessage = ({ data }) => (resolve(data), brickRoad.terminate());
 			brickRoad.onerror = (error) => (reject(error), brickRoad.terminate());
 			brickRoad.postMessage(input);
 		});
