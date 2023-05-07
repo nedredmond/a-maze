@@ -29,6 +29,7 @@ module.exports = {
 		},
 	],
 	rules: {
+		'no-console': ['warn', {}],
 		'@typescript-eslint/no-non-null-assertion': 'off',
 		'no-unused-vars': 'off',
 		'@typescript-eslint/no-unused-vars': [

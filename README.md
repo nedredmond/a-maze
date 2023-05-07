@@ -12,4 +12,3 @@ This is a simple maze generator I made to amuse my son. Maybe it will amuse you 
   - So far, I've only mapped A-Z. When I have time, I may add numbers and some special characters.
 - Print mode will hide the controls, maximize the maze size, and include a QR code that contains a link to the text maze page with the same text.
   - If not in text maze mode, will link just to the main site.
-  

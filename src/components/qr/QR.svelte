@@ -9,10 +9,7 @@
 	const baseUrl = 'nedredmond.github.io/a-maze';
 
 	onMount(() => {
-		updateQrCode = (text: string) =>
-			QRCode.toCanvas(canvas, text, (e) => {
-				if (e) console.error(e);
-			});
+		updateQrCode = (text: string) => QRCode.toCanvas(canvas, text);
 	});
 
 	$: {
@@ -29,8 +26,8 @@
 	@media print {
 		#qrcode {
 			display: block !important;
-			width: 32px;
-			height: 32px;
+			width: 2cm;
+			height: 2cm;
 			margin: auto;
 		}
 	}
