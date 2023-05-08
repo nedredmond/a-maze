@@ -13,6 +13,7 @@
 		($dimensions = $isTextMode ? { ...$dimensions } : clampDimensions($dimensions));
 	const handleToggleTextMode = () => {
 		$isTextMode = !$isTextMode;
+		handleRegenerate();
 	};
 
 	const textModeToggleLabel = (inTextMode: boolean) =>
