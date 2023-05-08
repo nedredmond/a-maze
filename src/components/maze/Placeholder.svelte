@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { area } from '../../store';
+	import { area } from '../../stores';
 </script>
 
 {#each { length: $area } as _}

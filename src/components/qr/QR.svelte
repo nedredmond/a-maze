@@ -1,22 +1,17 @@
 <script lang="ts">
-	import { text, isTextMode } from '../../store';
+	import { shareURL } from '../../stores';
 	import QRCode from 'qrcode';
 	import { onMount } from 'svelte';
 
 	let canvas: HTMLCanvasElement;
 	let updateQrCode: (text: string) => void;
 
-	const baseUrl = 'nedredmond.github.io/a-maze';
-
 	onMount(() => {
 		updateQrCode = (text: string) => QRCode.toCanvas(canvas, text);
 	});
 
 	$: {
-		if (updateQrCode instanceof Function) {
-			const url = $isTextMode ? baseUrl + '?text=' + encodeURI($text) : baseUrl;
-			updateQrCode(url);
-		}
+		updateQrCode instanceof Function && updateQrCode($shareURL);
 	}
 </script>
 

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { dimensions, isTextMode, textMazeInput } from '../../store';
+	import { dimensions, isTextMode, textMazeInput } from '../../stores';
 	import { onMount } from 'svelte';
 	import Cell from './Cell.svelte';
 	import Gate from './svg/Gate.svelte';

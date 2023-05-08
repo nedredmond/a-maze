@@ -2,11 +2,12 @@
 	import Controls from '../components/controls/Controls.svelte';
 	import Qr from '../components/qr/QR.svelte';
 	import Maze from '../components/maze/Maze.svelte';
-	import { orientation, text, isTextMode } from '../store';
+	import { orientation, text, isTextMode } from '../stores';
+	import { page } from '$app/stores';
 	import { onMount } from 'svelte';
 
 	onMount(() => {
-		const urlParams = new URLSearchParams(window.location.search);
+		const urlParams = $page.url.searchParams;
 		if (urlParams.has('text')) {
 			const encoded = urlParams.get('text');
 			if (encoded) {

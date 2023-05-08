@@ -1,21 +1,20 @@
 <script lang="ts">
-	import { dimensions, isTextMode, text } from '../../store';
+	import { dimensions, isTextMode, text, shareURL } from '../../stores';
 	import { MAX_SIZE, MIN_SIZE, clampDimensions } from './utils';
+	import IconButton from './IconButton.svelte';
 	import TextModeSvg from './svg/TextModeSVG.svelte';
 	import PrintSvg from './svg/PrintSVG.svelte';
 	import RefreshSvg from './svg/RefreshSVG.svelte';
+	import CopySvg from './svg/CopySVG.svelte';
 
-	const refresh = () => {
-		if ($isTextMode) {
-			$text = $text + '';
-		} else {
-			$dimensions = clampDimensions($dimensions);
-		}
-	};
-	const toggleTextMode = () => {
+	const handleCopyShareURL = () => navigator.clipboard.writeText($shareURL);
+	const handlePrint = () => window.print();
+	const handleRegenerate = () =>
+		($dimensions = $isTextMode ? { ...$dimensions } : clampDimensions($dimensions));
+	const handleToggleTextMode = () => {
 		$isTextMode = !$isTextMode;
-		refresh();
 	};
+
 	const textModeToggleLabel = (inTextMode: boolean) =>
 		(inTextMode ? 'Exit' : 'Enter') + ' Text Mode';
 </script>
@@ -33,32 +32,26 @@
 			</span>
 		{/if}
 		<div class="row">
-			<button
-				on:click={toggleTextMode}
+			{#if $isTextMode}
+				<IconButton fn={handleCopyShareURL} title="Copy Link to Text Maze">
+					<CopySvg />
+				</IconButton>
+			{/if}
+			<IconButton
+				fn={handleToggleTextMode}
 				role="switch"
 				aria-checked={$isTextMode}
 				class={'button' + ($isTextMode ? ' active' : '')}
-				aria-label={textModeToggleLabel($isTextMode)}
 				title={textModeToggleLabel($isTextMode)}
 			>
 				<TextModeSvg />
-			</button>
-			<button
-				on:click={() => window.print()}
-				class={'button'}
-				aria-label={'Print or Download Maze'}
-				title={'Print or Download Maze'}
-			>
+			</IconButton>
+			<IconButton fn={handlePrint} title="Print or Download Maze">
 				<PrintSvg />
-			</button>
-			<button
-				on:click={refresh}
-				class="button"
-				aria-label="Regenerate Maze"
-				title="Regenerate Maze"
-			>
+			</IconButton>
+			<IconButton fn={handleRegenerate} title="Regenerate Maze">
 				<RefreshSvg />
-			</button>
+			</IconButton>
 		</div>
 	</div>
 	{#if $isTextMode}
@@ -111,20 +104,5 @@
 		align-items: stretch;
 		justify-content: space-between;
 		gap: 1em;
-	}
-	.button {
-		display: flex;
-		width: 1.125em;
-		margin: auto;
-		background: none;
-		color: inherit;
-		border: none;
-		padding: 0;
-		font: inherit;
-		cursor: pointer;
-		outline: inherit;
-	}
-	.active {
-		color: blueviolet;
 	}
 </style>
