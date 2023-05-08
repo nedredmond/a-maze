@@ -1,3 +1,4 @@
+<svelte:options immutable/>
 <script lang="ts">
 	import { area } from '../../stores';
 </script>

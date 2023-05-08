@@ -1,3 +1,4 @@
+<svelte:options immutable/>
 <script lang="ts">
 	import type { Fill } from '../../types';
 

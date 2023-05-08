@@ -1,7 +1,7 @@
 <script lang="ts">
 	import Controls from '../components/controls/Controls.svelte';
 	import Qr from '../components/qr/QR.svelte';
-	import Maze from '../components/maze/Maze.svelte';
+	import Maze from '../components/maze/MazeController.svelte';
 	import { orientation, text, isTextMode } from '../stores';
 	import { page } from '$app/stores';
 	import { onMount } from 'svelte';
@@ -39,7 +39,7 @@
 	}
 	.container {
 		width: 90vw;
-		max-width: 550px;
+		max-width: 666px;
 		box-sizing: border-box;
 		margin: auto;
 		display: flex;
