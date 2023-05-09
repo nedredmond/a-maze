@@ -1,7 +1,7 @@
 <script lang="ts">
 	import Controls from '../components/controls/Controls.svelte';
 	import Qr from '../components/qr/QR.svelte';
-	import Maze from '../components/maze/MazeController.svelte';
+	import Maze from '../components/maze/MazeLoader.svelte';
 	import { orientation } from '../stores';
 </script>
 

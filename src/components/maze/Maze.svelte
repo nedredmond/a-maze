@@ -1,42 +1,33 @@
 <svelte:options immutable />
 
 <script lang="ts">
+	import { isExplorerMode } from '../../stores';
 	import type { Maze } from '../../types';
 	import Cell from './Cell.svelte';
-	import Gate from './svg/Gate.svelte';
+	import Gate from './Gate.svelte';
+	import ActorLocator from './explorers/ActorLocator.svelte';
 
 	export let maze: Maze;
 </script>
 
-{#each maze.cells as cell, i}
-	{#if i === 0}
-		<Cell {...cell}>
-			<div class="portal entrance">
-				<Gate />
-			</div>
-		</Cell>
-	{:else if i === maze.cells.length - 1}
-		<Cell {...cell}>
-			<div class="portal exit">
-				<Gate />
-			</div>
-		</Cell>
+{#each maze.cells as cell, index}
+	{#if index === 0}
+		<Gate {cell} egress="entrance">
+			{#if $isExplorerMode}
+				<ActorLocator {index} />
+			{/if}
+		</Gate>
+	{:else if index === maze.cells.length - 1}
+		<Gate {cell} egress="exit">
+			{#if $isExplorerMode}
+				<ActorLocator {index} />
+			{/if}
+		</Gate>
 	{:else}
-		<Cell {...cell} />
+		<Cell {...cell}>
+			{#if $isExplorerMode}
+				<ActorLocator {index} />
+			{/if}
+		</Cell>
 	{/if}
 {/each}
-
-<style>
-	.portal {
-		width: 100%;
-		height: 100%;
-		position: absolute;
-		background-color: white;
-	}
-	.entrance {
-		right: 75%;
-	}
-	.exit {
-		left: 75%;
-	}
-</style>

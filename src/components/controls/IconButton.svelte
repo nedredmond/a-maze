@@ -12,7 +12,6 @@
 	.button {
 		display: flex;
 		width: 1.125em;
-		margin: auto;
 		background: none;
 		color: inherit;
 		border: none;

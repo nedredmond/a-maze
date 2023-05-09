@@ -22,6 +22,11 @@ export interface Dimensions {
 	width: number;
 }
 
+export interface Position {
+	x: number;
+	y: number;
+}
+
 export type MazeInput = Dimensions | TextMazeInput;
 
 export type TextMazeInput = {
