@@ -2,20 +2,7 @@
 	import Controls from '../components/controls/Controls.svelte';
 	import Qr from '../components/qr/QR.svelte';
 	import Maze from '../components/maze/MazeController.svelte';
-	import { orientation, text, isTextMode } from '../stores';
-	import { page } from '$app/stores';
-	import { onMount } from 'svelte';
-
-	onMount(() => {
-		const urlParams = $page.url.searchParams;
-		if (urlParams.has('text')) {
-			const encoded = urlParams.get('text');
-			if (encoded) {
-				$isTextMode = true;
-				$text = decodeURI(encoded);
-			}
-		}
-	});
+	import { orientation } from '../stores';
 </script>
 
 <svelte:head>
