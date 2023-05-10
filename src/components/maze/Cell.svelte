@@ -1,7 +1,6 @@
 <svelte:options immutable />
 
 <script lang="ts">
-	import Theseus from './explorers/Theseus.svelte';
 	import type { Fill } from '../../types';
 
 	// false means there is a border
@@ -9,8 +8,7 @@
 		bottom = false,
 		right = false,
 		left = false,
-		fill: Fill = null,
-		theseus = false;
+		fill: Fill = null;
 
 	const borderColor = 'black';
 	const borderWidth = 1;
@@ -25,9 +23,6 @@
 </script>
 
 <div {style} class={$$props.class}>
-	{#if theseus}
-		<Theseus />
-	{/if}
 	<slot />
 </div>
 

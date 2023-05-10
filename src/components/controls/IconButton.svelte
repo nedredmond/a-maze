@@ -1,10 +1,21 @@
 <script lang="ts">
 	export let fn: () => void,
 		role = 'button',
-		title: string;
+		title: string,
+		disabled = false,
+		active = false;
 </script>
 
-<button tabindex="0" on:click={fn} class="button" {role} {title} aria-label={title} {...$$props}>
+<button
+	tabindex="0"
+	on:click={disabled ? () => {} : fn}
+	class={'button' + (disabled ? ' disabled' : '') + (active ? ' active' : '')}
+	{role}
+	{title}
+	aria-label={title}
+	aria-disabled={disabled}
+	{...$$props}
+>
 	<slot />
 </button>
 
@@ -25,5 +36,9 @@
 	}
 	.active {
 		color: blueviolet;
+	}
+	.disabled {
+		color: gray;
+		cursor: not-allowed;
 	}
 </style>

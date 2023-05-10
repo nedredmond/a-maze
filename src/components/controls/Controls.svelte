@@ -8,6 +8,7 @@
 		minotaurPosition,
 		minotaurStartingPosition,
 		controlsDisabled,
+		theseusPosition,
 	} from '../../stores';
 	import { MAX_SIZE, MIN_SIZE, clampDimensions } from './utils';
 	import IconButton from './IconButton.svelte';
@@ -21,9 +22,9 @@
 	const handlePrint = () => window.print();
 	const handleRegenerate = () => {
 		$dimensions = $isTextMode ? { ...$dimensions } : clampDimensions($dimensions);
-		if ($isExplorerMode) {
-			$minotaurPosition = $minotaurStartingPosition;
-		}
+		// if ($isExplorerMode) {
+		// 	$minotaurPosition = $minotaurStartingPosition;
+		// }
 	};
 
 	const handleToggleTextMode = () => {
@@ -34,6 +35,7 @@
 		$isExplorerMode = !$isExplorerMode;
 		if ($isExplorerMode) {
 			$minotaurPosition = $minotaurStartingPosition;
+			$theseusPosition = { x: 0, y: 0 };
 		}
 	};
 	const toggleText = (on: boolean, mode: string) => `${on ? 'Exit' : 'Enter'} ${mode} Mode`;
@@ -60,8 +62,8 @@
 				fn={handleToggleExplorerMode}
 				role="switch"
 				aria-checked={$isExplorerMode}
-				class={'button' + ($isExplorerMode ? ' active' : '')}
 				title={toggleText($isExplorerMode, 'Explorer')}
+				active={$isExplorerMode}
 			>
 				<TorchSvg />
 			</IconButton>
@@ -69,20 +71,25 @@
 				fn={handleToggleTextMode}
 				role="switch"
 				aria-checked={$isTextMode}
-				class={'button' + ($isTextMode ? ' active' : '')}
 				title={toggleText($isTextMode, 'Text')}
+				active={$isTextMode}
+				disabled={$isExplorerMode}
 			>
 				<TextModeSvg />
 			</IconButton>
 			{#if $isTextMode}
-				<IconButton fn={handleCopyShareURL} title="Copy Link to Text Maze">
+				<IconButton
+					fn={handleCopyShareURL}
+					title="Copy Link to Text Maze"
+					disabled={$isExplorerMode}
+				>
 					<CopySvg />
 				</IconButton>
 			{/if}
-			<IconButton fn={handlePrint} title="Print or Download Maze">
+			<IconButton fn={handlePrint} title="Print or Download Maze" disabled={$isExplorerMode}>
 				<PrintSvg />
 			</IconButton>
-			<IconButton fn={handleRegenerate} title="Regenerate Maze">
+			<IconButton fn={handleRegenerate} title="Regenerate Maze" disabled={$isExplorerMode}>
 				<RefreshSvg />
 			</IconButton>
 		</div>
