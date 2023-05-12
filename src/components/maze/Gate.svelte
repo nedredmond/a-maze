@@ -11,7 +11,7 @@
 	<div class="portal {egress}">
 		<GateSvg />
 	</div>
-    <slot />
+	<slot />
 </Cell>
 
 <style>

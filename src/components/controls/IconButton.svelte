@@ -8,7 +8,7 @@
 
 <button
 	tabindex="0"
-	on:click={disabled ? () => {} : fn}
+	on:click={disabled ? () => false : fn}
 	class={'button' + (disabled ? ' disabled' : '') + (active ? ' active' : '')}
 	{role}
 	{title}

@@ -16,7 +16,7 @@
 	import PrintSvg from './svg/PrintSVG.svelte';
 	import RefreshSvg from './svg/RefreshSVG.svelte';
 	import CopySvg from './svg/CopySVG.svelte';
-	import TorchSvg from './svg/TorchSVG.svelte';
+	import MapSvg from './svg/MapSVG.svelte';
 
 	const handleCopyShareURL = () => navigator.clipboard.writeText($shareURL);
 	const handlePrint = () => window.print();
@@ -65,7 +65,7 @@
 				title={toggleText($isExplorerMode, 'Explorer')}
 				active={$isExplorerMode}
 			>
-				<TorchSvg />
+				<MapSvg />
 			</IconButton>
 			<IconButton
 				fn={handleToggleTextMode}

@@ -1,55 +1,72 @@
 <script lang="ts">
 	import Actor from './ActorTemplate.svelte';
-	import { theseusPosition, grid, theseusIndex, area } from '../../../stores';
-	import { getExpression, restingExpression } from './theseus';
+	import { theseusPosition, grid, theseusIndex, area, swipeDirection } from '../../../stores';
+	import { getExpression, restingExpression, KeyDirection } from './utils';
+	import type { Direction } from '../../../types';
 
 	function init(el: HTMLDivElement) {
 		el.focus();
-		console.log({ $theseusIndex, $area });
 	}
 
-	const escaped = $theseusIndex === $area - 1;
-	let theseus = restingExpression(escaped);
+	const isEscaped = $theseusIndex === $area - 1;
+	let theseus = restingExpression(isEscaped);
 
-	let bumped = false;
+	let bumpedH = false;
+	let bumpedV = false;
 	let timeoutId = 0;
-	const onBump = () => {
-		bumped = !bumped;
+	const onBump = (direction: Direction) => {
+		const h = direction === 'left' || direction === 'right';
+		if (h && bumpedH) return;
+		if (!h && bumpedV) return;
+		if (h) bumpedH = true;
+		else bumpedV = true;
 		theseus = getExpression('oops');
 		timeoutId++;
 		const tId = timeoutId;
 		setTimeout(() => {
 			// cancel timeout if new was set
-			if (tId === timeoutId) bumped = false;
-			theseus = restingExpression(escaped);
+			if (tId === timeoutId) {
+				bumpedH = false;
+				bumpedV = false;
+			}
+			theseus = restingExpression(isEscaped);
 		}, 500);
 	};
-
+	const getClass = (h: boolean, v: boolean) => {
+		const classes = [];
+		if (h) classes.push('bumpedH');
+		if (v) classes.push('bumpedV');
+		return classes.join(' ');
+	};
+	getClass;
 	$: cell = $grid[$theseusPosition.y][$theseusPosition.x];
-
-	const onKeyDown = ({ key }: KeyboardEvent) => {
-		console.log({ cell });
+	$: move($swipeDirection);
+	const move = (direction: Direction) => {
 		switch (true) {
-			case 'ArrowUp' === key && cell.top:
+			case !direction:
+				return;
+			case direction === 'top' && cell.top:
 				$theseusPosition.y--;
 				break;
-			case 'ArrowDown' === key && cell.bottom:
+			case direction === 'bottom' && cell.bottom:
 				$theseusPosition.y++;
 				break;
-			case 'ArrowLeft' === key && cell.left:
+			case direction === 'left' && cell.left:
 				$theseusPosition.x--;
 				break;
-			case 'ArrowRight' === key && cell.right:
+			case direction === 'right' && cell.right:
 				$theseusPosition.x++;
 				break;
 			default:
-				return onBump();
+				onBump(direction);
 		}
+		if ($swipeDirection) $swipeDirection = null;
 	};
+	const onKeyDown = ({ key }: KeyboardEvent) => move(KeyDirection[key]);
 </script>
 
 <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
-<div use:init tabindex="0" on:keydown|preventDefault={onKeyDown} class={bumped ? 'bumped' : ''}>
+<div use:init tabindex="0" on:keydown|preventDefault={onKeyDown} class={getClass(bumpedH, bumpedV)}>
 	<Actor actor={theseus} key="theseus" />
 </div>
 
@@ -61,10 +78,10 @@
 	div:focus {
 		outline: none;
 	}
-	div.bumped {
-		animation: bump 0.3s ease-in-out;
+	div.bumpedH {
+		animation: bumpH 0.3s ease-in-out;
 	}
-	@keyframes bump {
+	@keyframes bumpH {
 		5%,
 		95% {
 			transform: translate3d(-1px, 0, 0);
@@ -84,6 +101,31 @@
 		20%,
 		80% {
 			transform: translate3d(2px, 0, 0);
+		}
+	}
+	div.bumpedV {
+		animation: bumpV 0.3s ease-in-out;
+	}
+	@keyframes bumpV {
+		5%,
+		95% {
+			transform: 0, -1px;
+		}
+
+		10%,
+		90% {
+			transform: translate3d(0, 1px, 0);
+		}
+
+		15%,
+		50%,
+		85% {
+			transform: translate3d(0, -2px, 0);
+		}
+
+		20%,
+		80% {
+			transform: translate3d(0, 2px, 0);
 		}
 	}
 </style>

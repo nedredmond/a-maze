@@ -1,3 +1,6 @@
+const directions = ['top', 'right', 'bottom', 'left', null] as const;
+export type Direction = (typeof directions)[number];
+
 export type Cell = {
 	top?: boolean;
 	bottom?: boolean;
