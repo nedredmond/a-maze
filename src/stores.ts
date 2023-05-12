@@ -1,7 +1,9 @@
 import { derived, get, writable, type Writable } from 'svelte/store';
 import { getLines, getTextMazeDimensions } from './components/maze/utils/maze';
-import type { Cell, Dimensions, Position, TextMazeInput } from './types';
+import type { Cell, Dimensions, Direction, Position, TextMazeInput } from './types';
 import { page } from '$app/stores';
+
+export const swipeDirection = writable<Direction>(null);
 
 export const grid = writable<Cell[][]>([]);
 export const dimensions = writable<Dimensions>({ height: 20, width: 20 });

@@ -1,9 +1,14 @@
 <script lang="ts">
+	import { crossfadeTransition } from './transitions';
+
 	export let actor = '😶';
+	const [send, receive] = crossfadeTransition;
+
+	export let key: string;
 </script>
 
-<svg viewBox="0 0 24 24">
-	<text y="18" x="2">{actor}</text>
+<svg viewBox="0 0 24 24" in:receive={{ key }} out:send={{ key }}>
+	<text y="55%" x="50%" dominant-baseline="middle" text-anchor="middle">{actor}</text>
 </svg>
 
 <style>
@@ -11,10 +16,8 @@
 		position: absolute;
 		height: 100%;
 		width: 100%;
-		margin-left: auto;
-		margin-right: auto;
-		left: 0;
-		right: 0;
-		text-align: center;
+	}
+	*:focus {
+		outline: none;
 	}
 </style>

@@ -2,14 +2,24 @@
 	import Controls from '../components/controls/Controls.svelte';
 	import Qr from '../components/qr/QR.svelte';
 	import Maze from '../components/maze/MazeLoader.svelte';
-	import { orientation } from '../stores';
+	import { orientation, swipeDirection } from '../stores';
+
+	import { swipe } from 'svelte-gestures';
+	import type { Direction } from '../types';
+
+	const swipeHandler = (
+		e: CustomEvent<{
+			direction: Direction;
+			target: EventTarget;
+		}>,
+	) => ($swipeDirection = e.detail.direction);
 </script>
 
 <svelte:head>
 	<title>A Maze</title>
 </svelte:head>
 
-<div class="container" style:--page-orientation={$orientation}>
+<div class="container" style:--page-orientation={$orientation} use:swipe on:swipe={swipeHandler}>
 	<Controls />
 	<Maze />
 	<Qr />
