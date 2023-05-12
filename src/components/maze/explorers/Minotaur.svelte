@@ -2,4 +2,4 @@
 	import Actor from './ActorTemplate.svelte';
 </script>
 
-<Actor actor="🐮" />
+<Actor actor="🐮" key="minotaur" />

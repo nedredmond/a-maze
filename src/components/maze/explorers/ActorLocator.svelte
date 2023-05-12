@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { theseusIndex } from '../../../stores';
+	import { theseusIndex, area } from '../../../stores';
 	import Theseus from './Theseus.svelte';
 
 	export let index: number;
