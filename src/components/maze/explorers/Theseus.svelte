@@ -62,6 +62,9 @@
 			case direction === 'right' && cell.right:
 				$theseusPosition.x++;
 				break;
+			case escaped && direction === 'right':
+				theseus = getExpression('escaped');
+				break;
 			default:
 				onBump(direction);
 		}
