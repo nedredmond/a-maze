@@ -4,16 +4,22 @@
 	import { getExpression, restingExpression, KeyDirection } from './utils';
 	import type { Direction } from '../../../types';
 
-	function init(el: HTMLDivElement) {
-		el.focus();
-	}
+	const escaped = $theseusIndex === $area - 1;
+	let idle = false;
+	const resetExpression = () => restingExpression({ escaped, idle });
 
-	const isEscaped = $theseusIndex === $area - 1;
-	let theseus = restingExpression(isEscaped);
+	let theseus = resetExpression();
+	const init = (el: HTMLDivElement) => {
+		el.focus();
+		setTimeout(() => {
+			idle = true;
+			theseus = resetExpression();
+		}, 5000);
+	};
 
 	let bumpedH = false;
 	let bumpedV = false;
-	let timeoutId = 0;
+	let bumpedTimeout = 0;
 	const onBump = (direction: Direction) => {
 		const h = direction === 'left' || direction === 'right';
 		if (h && bumpedH) return;
@@ -21,15 +27,14 @@
 		if (h) bumpedH = true;
 		else bumpedV = true;
 		theseus = getExpression('oops');
-		timeoutId++;
-		const tId = timeoutId;
+		bumpedTimeout++;
+		const tId = bumpedTimeout;
 		setTimeout(() => {
-			// cancel timeout if new was set
-			if (tId === timeoutId) {
+			if (tId === bumpedTimeout) {
 				bumpedH = false;
 				bumpedV = false;
 			}
-			theseus = restingExpression(isEscaped);
+			theseus = resetExpression();
 		}, 500);
 	};
 	const getClass = (h: boolean, v: boolean) => {
