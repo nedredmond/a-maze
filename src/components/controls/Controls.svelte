@@ -5,11 +5,13 @@
 		text,
 		shareURL,
 		isExplorerMode,
+		controlsDisabled,
+	} from '../../stores';
+	import {
 		minotaurPosition,
 		minotaurStartingPosition,
-		controlsDisabled,
 		theseusPosition,
-	} from '../../stores';
+	} from '../maze/explorers/actorStores';
 	import { MAX_SIZE, MIN_SIZE, clampDimensions } from './utils';
 	import IconButton from './IconButton.svelte';
 	import TextModeSvg from './svg/TextModeSVG.svelte';
