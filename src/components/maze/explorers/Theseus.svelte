@@ -1,12 +1,17 @@
 <script lang="ts">
 	import Actor from './ActorTemplate.svelte';
-	import { theseusPosition, grid, theseusIndex, area, swipeDirection } from '../../../stores';
-	import { getExpression, restingExpression, KeyDirection } from './utils';
-	import type { Direction } from '../../../types';
+	import { area, swipeDirection } from '../../../stores';
+	import { getExpression, restingExpression, KeyDirection, updatePosition } from './utils';
+	import type { Cell, Direction } from '../../../types';
+	import { createEventDispatcher } from 'svelte';
+	import { theseusIndex, theseusPosition } from './actorStores';
+
+	export const dispatch = createEventDispatcher();
+	export let dead = false;
 
 	const escaped = $theseusIndex === $area - 1;
 	let idle = false;
-	const resetExpression = () => restingExpression({ escaped, idle });
+	const resetExpression = () => restingExpression({ idle, escaped, dead });
 
 	let theseus = resetExpression();
 	const init = (el: HTMLDivElement) => {
@@ -43,10 +48,12 @@
 		if (v) classes.push('bumpedV');
 		return classes.join(' ');
 	};
-	getClass;
-	$: cell = $grid[$theseusPosition.y][$theseusPosition.x];
+
+	export let cell: Cell;
 	$: move($swipeDirection);
 	const move = (direction: Direction) => {
+		if (dead) return;
+		dispatch('move', {});
 		switch (true) {
 			case !direction:
 				return;

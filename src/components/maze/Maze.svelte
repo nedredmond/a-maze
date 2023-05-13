@@ -4,30 +4,23 @@
 	import { isExplorerMode } from '../../stores';
 	import type { Maze } from '../../types';
 	import Cell from './Cell.svelte';
-	import Gate from './Gate.svelte';
 	import ActorLocator from './explorers/ActorLocator.svelte';
+	import type Minotaur from './explorers/Minotaur.svelte';
 
 	export let maze: Maze;
+	let minotaur: Minotaur;
+
+	const egress = (index: number) => {
+		if (index === 0) return 'entrance';
+		if (index === maze.cells.length - 1) return 'exit';
+		return null;
+	};
 </script>
 
 {#each maze.cells as cell, index}
-	{#if index === 0}
-		<Gate {cell} egress="entrance">
-			{#if $isExplorerMode}
-				<ActorLocator {index} />
-			{/if}
-		</Gate>
-	{:else if index === maze.cells.length - 1}
-		<Gate {cell} egress="exit">
-			{#if $isExplorerMode}
-				<ActorLocator {index} />
-			{/if}
-		</Gate>
-	{:else}
-		<Cell {...cell}>
-			{#if $isExplorerMode}
-				<ActorLocator {index} />
-			{/if}
-		</Cell>
-	{/if}
+	<Cell {...cell} egress={egress(index)}>
+		{#if $isExplorerMode}
+			<ActorLocator {index} {cell} bind:minotaur on:move={minotaur.move} />
+		{/if}
+	</Cell>
 {/each}
