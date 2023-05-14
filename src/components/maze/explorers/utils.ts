@@ -2,8 +2,8 @@ import type { Position, Direction, Cell } from '../../../types';
 
 export const updatePosition = (
 	position: Position,
-	direction: Direction,
 	cell: Cell,
+	direction?: Direction,
 ): Position | undefined => {
 	switch (true) {
 		case !direction:
@@ -25,9 +25,9 @@ export const updatePosition = (
 
 // theseus
 export const moods = {
-	default: ['😃', '🙂', '😀'],
-	dead: ['😵', '💀'],
-	escaped: ['😎', '🏆', '🥳'],
+	default: ['😃', '🙂', '😀', '😄'],
+	dead: ['😵', '🤕', '😵‍💫', '😭'],
+	escaped: ['😎', '🏆', '🥳', '😜'],
 	oops: ['😗', '🫤', '😖', '😤'],
 	idle: ['😪', '😴', '😑', '🙃'],
 };
@@ -38,14 +38,14 @@ export const getExpression = (mood: keyof typeof moods) => {
 export const restingExpression = ({
 	idle,
 	escaped,
-	dead,
+	gameOver,
 }: {
 	idle: boolean;
 	escaped: boolean;
-	dead: boolean;
+	gameOver: boolean;
 }) => {
 	switch (true) {
-		case dead:
+		case gameOver:
 			return getExpression('dead');
 		case escaped:
 			return getExpression('escaped');
@@ -63,9 +63,32 @@ export const KeyDirection: { [key: string]: Direction } = {
 } as const;
 
 // minotaur
-export const Left: { [key in Exclude<Direction, null>]: Direction } = {
+export const Left: { [key in Direction]: Direction } = {
 	top: 'left',
 	bottom: 'right',
 	left: 'bottom',
 	right: 'top',
 } as const;
+export const Back: { [key in Direction]: Direction } = {
+	top: 'bottom',
+	bottom: 'top',
+	left: 'right',
+	right: 'left',
+} as const;
+export const updateForDirection = (position: Position, direction: Direction): Position => {
+	switch (direction) {
+		case 'top':
+			position.y--;
+			break;
+		case 'bottom':
+			position.y++;
+			break;
+		case 'left':
+			position.x--;
+			break;
+		case 'right':
+			position.x++;
+			break;
+	}
+	return position;
+};

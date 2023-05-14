@@ -3,7 +3,7 @@ import { getLines, getTextMazeDimensions } from './components/maze/utils/maze';
 import type { Cell, Dimensions, Direction, TextMazeInput } from './types';
 import { page } from '$app/stores';
 
-export const swipeDirection = writable<Direction>(null);
+export const moveDirection = writable<Direction | null>(null);
 
 export const grid = writable<Cell[][]>([]);
 export const dimensions = writable<Dimensions>({ height: 20, width: 20 });
