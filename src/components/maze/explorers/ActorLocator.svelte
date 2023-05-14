@@ -19,11 +19,13 @@
 	$: gameOver = $caughtByMinotaur && !$minotaurDisabled;
 	$: escaped = $theseusIndex === $area - 1;
 	$: $stopGame = gameOver || escaped;
+
+	$: showMinotaur = !$minotaurDisabled && !$stopGame && !escaped && !(index === $theseusIndex);
 </script>
 
 {#if $theseusIndex === index}
 	<Theseus {cell} {gameOver} {escaped} on:moved />
 {/if}
-{#if !$minotaurDisabled && $minotaurIndex === index && !($theseusIndex === index)}
+{#if $minotaurIndex === index && showMinotaur}
 	<Minotaur {cell} on:moved />
 {/if}
