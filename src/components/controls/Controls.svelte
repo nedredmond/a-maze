@@ -58,12 +58,12 @@
 				{#if $stopGame}
 					<span>Game over!</span>
 				{:else}
-					<span>Escape the maze and avoid the minotaur!</span>
+					<span>Escape the maze{$minotaurDisabled ? '' : ' and avoid the minotaur'}!</span>
 				{/if}
 				<button
 					class="link-button"
 					on:click={disableMinotaur}
-					style={$stopGame ? 'visibility: hidden' : ''}
+					style={$stopGame || $minotaurDisabled ? 'visibility: hidden' : ''}
 					>Don't have a cowman (i.e., turn off minotaur)</button
 				>
 			</div>
