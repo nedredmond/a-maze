@@ -1,4 +1,6 @@
+import { get } from 'svelte/store';
 import type { Position, Direction, Cell } from '../../../types';
+import { theseusPosition } from './actorStores';
 
 export const updatePosition = (
 	position: Position,
@@ -63,32 +65,43 @@ export const KeyDirection: { [key: string]: Direction } = {
 } as const;
 
 // minotaur
-export const Left: { [key in Direction]: Direction } = {
-	top: 'left',
-	bottom: 'right',
-	left: 'bottom',
-	right: 'top',
+export const RelativeDirection = {
+	left: {
+		top: 'left',
+		bottom: 'right',
+		left: 'bottom',
+		right: 'top',
+	},
+	right: {
+		top: 'right',
+		bottom: 'left',
+		left: 'top',
+		right: 'bottom',
+	},
+	back: {
+		top: 'bottom',
+		bottom: 'top',
+		left: 'right',
+		right: 'left',
+	},
 } as const;
-export const Back: { [key in Direction]: Direction } = {
-	top: 'bottom',
-	bottom: 'top',
-	left: 'right',
-	right: 'left',
-} as const;
-export const updateForDirection = (position: Position, direction: Direction): Position => {
+export const updateForDirection = (nextPosition: Position, direction: Direction): Position => {
+	const orignalPosition = { ...nextPosition };
 	switch (direction) {
 		case 'top':
-			position.y--;
+			nextPosition.y--;
 			break;
 		case 'bottom':
-			position.y++;
+			nextPosition.y++;
 			break;
 		case 'left':
-			position.x--;
+			nextPosition.x--;
 			break;
 		case 'right':
-			position.x++;
+			nextPosition.x++;
 			break;
 	}
-	return position;
+	const tPos = get(theseusPosition);
+	if (nextPosition.x === tPos.x && nextPosition.y === tPos.y) return orignalPosition;
+	return nextPosition;
 };

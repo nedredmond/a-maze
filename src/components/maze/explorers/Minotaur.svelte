@@ -1,9 +1,9 @@
 <script lang="ts">
 	import { createEventDispatcher } from 'svelte';
-	import { Directions, type Cell, type Direction } from '../../../types';
+	import type { Cell, Direction } from '../../../types';
 	import Actor from './ActorTemplate.svelte';
 	import { minotaurLastDirection, minotaurPosition } from './actorStores';
-	import { Back, Left, updateForDirection } from './utils';
+	import { RelativeDirection, updateForDirection } from './utils';
 	import { moveDirection } from '../../../stores';
 
 	export const dispatch = createEventDispatcher();
@@ -13,11 +13,10 @@
 	export const move = (e: Direction | null) => {
 		if (!e) return;
 		const straight = $minotaurLastDirection;
-		const left = Left[straight];
-		const back = Back[straight];
-		var [other] = [...Directions].filter((item) => {
-			return ![straight, left, back].includes(item);
-		});
+		// order of preference: left, straight, right back
+		const left = RelativeDirection.left[straight];
+		const right = RelativeDirection.right[straight];
+		const back = RelativeDirection.back[straight];
 		const position = { ...$minotaurPosition };
 		switch (true) {
 			case cell[left]:
@@ -28,9 +27,9 @@
 				$minotaurPosition = updateForDirection(position, straight);
 				$minotaurLastDirection = straight;
 				break;
-			case cell[other]:
-				$minotaurPosition = updateForDirection(position, other);
-				$minotaurLastDirection = other;
+			case cell[right]:
+				$minotaurPosition = updateForDirection(position, right);
+				$minotaurLastDirection = right;
 				break;
 			case cell[back]:
 				$minotaurPosition = updateForDirection(position, back);
