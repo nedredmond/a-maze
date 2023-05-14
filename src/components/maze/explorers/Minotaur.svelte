@@ -10,7 +10,7 @@
 
 	export let cell: Cell;
 	$: move($moveDirection);
-	export const move = (e: any) => {
+	export const move = (e: Direction | null) => {
 		if (!e) return;
 		const straight = $minotaurLastDirection;
 		const left = Left[straight];

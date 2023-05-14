@@ -2,6 +2,7 @@
 
 <script lang="ts">
 	import { isExplorerMode, moveDirection } from '../../stores';
+	import { minotaurDisabled } from './explorers/actorStores';
 	import type { Maze } from '../../types';
 	import Cell from './Cell.svelte';
 	import ActorLocator from './explorers/ActorLocator.svelte';
@@ -23,6 +24,7 @@
 	 * When both actors have moved, reset moveDirection
 	 **/
 	const onMoved = ({ detail }: { detail: string }) => {
+		if ($minotaurDisabled) $moveDirection = null;
 		movedActors[detail] = true;
 		if (movedActors.theseus && movedActors.minotaur) {
 			$moveDirection = null;
