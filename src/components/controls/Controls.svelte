@@ -51,9 +51,7 @@
 
 <div id="controls" class="controls outer">
 	<div class="row">
-		{#if $isTextMode}
-			<label for="text">Enter maze text: </label>
-		{:else if $isExplorerMode}
+		{#if $isExplorerMode}
 			<div style="display:flex;flex-direction:column;align-items:flex-start">
 				{#if $stopGame}
 					<span>Game over!</span>
@@ -67,6 +65,8 @@
 					>Don't have a cowman (i.e., turn off minotaur)</button
 				>
 			</div>
+		{:else if $isTextMode}
+			<label for="text">Enter maze text: </label>
 		{:else}
 			<span>
 				Maze dimensions:
