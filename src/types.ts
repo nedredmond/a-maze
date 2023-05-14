@@ -1,16 +1,16 @@
-const directions = ['top', 'right', 'bottom', 'left', null] as const;
-export type Direction = (typeof directions)[number];
+export const Directions = ['top', 'right', 'bottom', 'left'] as const;
+export type Direction = (typeof Directions)[number];
+
+export type Walls = {
+	[direction in Direction]?: boolean;
+};
 
 export type Cell = {
-	top?: boolean;
-	bottom?: boolean;
-	right?: boolean;
-	left?: boolean;
 	x: number;
 	y: number;
 	visited?: boolean;
 	fill?: Fill;
-};
+} & Walls;
 
 export type Grid = Cell[][];
 

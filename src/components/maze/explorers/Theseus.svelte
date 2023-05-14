@@ -1,16 +1,21 @@
 <script lang="ts">
 	import Actor from './ActorTemplate.svelte';
-	import { theseusPosition, grid, theseusIndex, area, swipeDirection } from '../../../stores';
-	import { getExpression, restingExpression, KeyDirection } from './utils';
-	import type { Direction } from '../../../types';
+	import { moveDirection } from '../../../stores';
+	import { getExpression, restingExpression } from './utils';
+	import type { Cell, Direction } from '../../../types';
+	import { createEventDispatcher } from 'svelte';
+	import { theseusPosition } from './actorStores';
 
-	const escaped = $theseusIndex === $area - 1;
+	export const dispatch = createEventDispatcher();
+	export let escaped = false;
+	export let gameOver = false;
+
 	let idle = false;
-	const resetExpression = () => restingExpression({ escaped, idle });
+	const resetExpression = () => restingExpression({ idle, escaped, gameOver });
 
 	let theseus = resetExpression();
-	const init = (el: HTMLDivElement) => {
-		el.focus();
+	const init = (_: HTMLDivElement) => {
+		if (escaped || gameOver) return;
 		setTimeout(() => {
 			idle = true;
 			theseus = resetExpression();
@@ -43,10 +48,11 @@
 		if (v) classes.push('bumpedV');
 		return classes.join(' ');
 	};
-	getClass;
-	$: cell = $grid[$theseusPosition.y][$theseusPosition.x];
-	$: move($swipeDirection);
-	const move = (direction: Direction) => {
+
+	export let cell: Cell;
+	$: move($moveDirection);
+	const move = (direction: Direction | null) => {
+		if (gameOver || escaped) return;
 		switch (true) {
 			case !direction:
 				return;
@@ -63,15 +69,13 @@
 				$theseusPosition.x++;
 				break;
 			default:
-				onBump(direction);
+				onBump(direction!);
 		}
-		if ($swipeDirection) $swipeDirection = null;
+		dispatch('moved', 'theseus');
 	};
-	const onKeyDown = ({ key }: KeyboardEvent) => move(KeyDirection[key]);
 </script>
 
-<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
-<div use:init tabindex="0" on:keydown|preventDefault={onKeyDown} class={getClass(bumpedH, bumpedV)}>
+<div use:init class={getClass(bumpedH, bumpedV)}>
 	<Actor actor={theseus} key="theseus" />
 </div>
 

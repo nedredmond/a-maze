@@ -5,11 +5,16 @@
 		text,
 		shareURL,
 		isExplorerMode,
+		controlsDisabled,
+		mazeRef,
+	} from '../../stores';
+	import {
 		minotaurPosition,
 		minotaurStartingPosition,
-		controlsDisabled,
 		theseusPosition,
-	} from '../../stores';
+		stopGame,
+		minotaurDisabled,
+	} from '../maze/explorers/actorStores';
 	import { MAX_SIZE, MIN_SIZE, clampDimensions } from './utils';
 	import IconButton from './IconButton.svelte';
 	import TextModeSvg from './svg/TextModeSVG.svelte';
@@ -18,25 +23,28 @@
 	import CopySvg from './svg/CopySVG.svelte';
 	import MapSvg from './svg/MapSVG.svelte';
 
+	const resetExplorerMode = () => {
+		$minotaurPosition = $minotaurStartingPosition;
+		$theseusPosition = { x: 0, y: 0 };
+		$minotaurDisabled = false;
+		$mazeRef?.focus();
+	};
+	const handleToggleExplorerMode = () => {
+		$isExplorerMode = !$isExplorerMode;
+		resetExplorerMode();
+	};
+	const disableMinotaur = () => (($minotaurDisabled = true), $mazeRef?.focus());
+
 	const handleCopyShareURL = () => navigator.clipboard.writeText($shareURL);
 	const handlePrint = () => window.print();
 	const handleRegenerate = () => {
+		if ($isExplorerMode) resetExplorerMode();
 		$dimensions = $isTextMode ? { ...$dimensions } : clampDimensions($dimensions);
-		// if ($isExplorerMode) {
-		// 	$minotaurPosition = $minotaurStartingPosition;
-		// }
 	};
 
 	const handleToggleTextMode = () => {
 		$isTextMode = !$isTextMode;
 		handleRegenerate();
-	};
-	const handleToggleExplorerMode = () => {
-		$isExplorerMode = !$isExplorerMode;
-		if ($isExplorerMode) {
-			$minotaurPosition = $minotaurStartingPosition;
-			$theseusPosition = { x: 0, y: 0 };
-		}
 	};
 	const toggleText = (on: boolean, mode: string) => `${on ? 'Exit' : 'Enter'} ${mode} Mode`;
 </script>
@@ -46,7 +54,19 @@
 		{#if $isTextMode}
 			<label for="text">Enter maze text: </label>
 		{:else if $isExplorerMode}
-			<span>Escape the maze and avoid the minotaur!</span>
+			<div style="display:flex;flex-direction:column;align-items:flex-start">
+				{#if $stopGame}
+					<span>Game over!</span>
+				{:else}
+					<span>Escape the maze{$minotaurDisabled ? '' : ' and avoid the minotaur'}!</span>
+				{/if}
+				<button
+					class="link-button"
+					on:click={disableMinotaur}
+					style={$stopGame || $minotaurDisabled ? 'visibility: hidden' : ''}
+					>Don't have a cowman (i.e., turn off minotaur)</button
+				>
+			</div>
 		{:else}
 			<span>
 				Maze dimensions:
@@ -57,7 +77,7 @@
 				</span>
 			</span>
 		{/if}
-		<div class="buttons">
+		<nav class="buttons">
 			<IconButton
 				fn={handleToggleExplorerMode}
 				role="switch"
@@ -89,10 +109,14 @@
 			<IconButton fn={handlePrint} title="Print or Download Maze" disabled={$isExplorerMode}>
 				<PrintSvg />
 			</IconButton>
-			<IconButton fn={handleRegenerate} title="Regenerate Maze" disabled={$isExplorerMode}>
+			<IconButton
+				fn={handleRegenerate}
+				title={$isExplorerMode ? 'Try Again?' : 'Regenerate Maze'}
+				disabled={$isExplorerMode && !$stopGame}
+			>
 				<RefreshSvg />
 			</IconButton>
-		</div>
+		</nav>
 	</div>
 	{#if !$isExplorerMode}
 		{#if $isTextMode}
@@ -158,5 +182,15 @@
 	}
 	.dimensions {
 		white-space: nowrap;
+	}
+	.link-button {
+		background: none;
+		border: none;
+		color: blueviolet;
+		cursor: pointer;
+		font-size: inherit;
+		padding: 0;
+		text-decoration: underline;
+		font-size: x-small;
 	}
 </style>

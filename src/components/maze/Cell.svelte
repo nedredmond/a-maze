@@ -2,6 +2,7 @@
 
 <script lang="ts">
 	import type { Fill } from '../../types';
+	import GateSvg from './svg/GateSVG.svelte';
 
 	// false means there is a border
 	export let top = false,
@@ -9,6 +10,8 @@
 		right = false,
 		left = false,
 		fill: Fill = null;
+
+	export let egress: 'entrance' | 'exit' | null = null;
 
 	const borderColor = 'black';
 	const borderWidth = 1;
@@ -22,12 +25,17 @@
 	`;
 </script>
 
-<div {style} class={$$props.class}>
+<div {style} class={'cell'}>
+	{#if egress}
+		<div class="portal {egress}">
+			<GateSvg />
+		</div>
+	{/if}
 	<slot />
 </div>
 
 <style>
-	div {
+	.cell {
 		-moz-box-sizing: border-box;
 		-webkit-box-sizing: border-box;
 		-webkit-print-color-adjust: exact !important;
@@ -35,5 +43,17 @@
 		box-sizing: border-box;
 		position: relative;
 		print-color-adjust: exact !important;
+	}
+	.portal {
+		width: 100%;
+		height: 100%;
+		position: absolute;
+		background-color: white;
+	}
+	.entrance {
+		right: 75%;
+	}
+	.exit {
+		left: 75%;
 	}
 </style>

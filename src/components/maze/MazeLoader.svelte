@@ -1,10 +1,20 @@
 <script lang="ts">
-	import { dimensions, isTextMode, textMazeInput, grid } from '../../stores';
+	import {
+		dimensions,
+		isTextMode,
+		textMazeInput,
+		grid,
+		moveDirection,
+		isExplorerMode,
+		mazeRef,
+	} from '../../stores';
 	import { onMount } from 'svelte';
 	import Maze from './Maze.svelte';
-	import type { MazeInput, Maze as MazeOutput } from '../../types';
-	import { debounce } from './utils/debounce';
+	import type { Direction, MazeInput, Maze as MazeOutput } from '../../types';
+	import { debounce, debouncePromise } from './utils/debounce';
 	import Placeholder from './Placeholder.svelte';
+	import { KeyDirection } from './explorers/utils';
+	import { stopGame } from './explorers/actorStores';
 
 	let Worker: typeof import('./utils/maze.worker?worker');
 	onMount(async () => {
@@ -20,10 +30,34 @@
 			brickRoad.postMessage(input);
 		});
 
-	const getMaze = debounce<typeof buildMaze>(buildMaze, 100);
+	const getMaze = debouncePromise<typeof buildMaze>(buildMaze, 100);
+
+	let main: HTMLElement;
+	$: {
+		if (main && $isExplorerMode) {
+			$mazeRef = main;
+			main.focus();
+		}
+	}
+
+	// Debouncing to ensure state can keep pace with user input
+	const onKeydown = debounce<({ key }: KeyboardEvent) => Direction>(
+		({ key }: KeyboardEvent) => ($moveDirection = KeyDirection[key]),
+		100,
+	);
+
+	$: allowInput = $isExplorerMode && !$stopGame;
 </script>
 
-<div id="maze" class="maze" style:--maze-size={$dimensions.width}>
+<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
+<main
+	bind:this={main}
+	id="maze"
+	class="maze"
+	style:--maze-size={$dimensions.width}
+	tabindex="0"
+	on:keydown|preventDefault={(e) => allowInput && !e.repeat && onKeydown(e)}
+>
 	{#if Worker}
 		{#await getMaze($isTextMode ? $textMazeInput : $dimensions)}
 			<Placeholder />
@@ -35,7 +69,7 @@
 	{:else}
 		<Placeholder />
 	{/if}
-</div>
+</main>
 
 <style>
 	.maze {
