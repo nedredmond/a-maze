@@ -26,4 +26,4 @@ export const debounce = <F extends (...args: Parameters<F>) => ReturnType<F>>(
 	};
 
 	return debounced as (...args: Parameters<F>) => ReturnType<F>;
-}
+};

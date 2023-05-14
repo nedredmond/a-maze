@@ -12,6 +12,7 @@
 		minotaurStartingPosition,
 		theseusPosition,
 		stopGame,
+		minotaurDisabled,
 	} from '../maze/explorers/actorStores';
 	import { MAX_SIZE, MIN_SIZE, clampDimensions } from './utils';
 	import IconButton from './IconButton.svelte';
@@ -21,24 +22,27 @@
 	import CopySvg from './svg/CopySVG.svelte';
 	import MapSvg from './svg/MapSVG.svelte';
 
+	const resetExplorerMode = () => {
+		$minotaurPosition = $minotaurStartingPosition;
+		$theseusPosition = { x: 0, y: 0 };
+		$minotaurDisabled = false;
+	};
+	const handleToggleExplorerMode = () => {
+		$isExplorerMode = !$isExplorerMode;
+		resetExplorerMode();
+	};
+	const disableMinotaur = () => ($minotaurDisabled = true);
+
 	const handleCopyShareURL = () => navigator.clipboard.writeText($shareURL);
 	const handlePrint = () => window.print();
 	const handleRegenerate = () => {
-		if ($isExplorerMode) {
-			$minotaurPosition = $minotaurStartingPosition;
-			$theseusPosition = { x: 0, y: 0 };
-		}
+		if ($isExplorerMode) resetExplorerMode();
 		$dimensions = $isTextMode ? { ...$dimensions } : clampDimensions($dimensions);
 	};
 
 	const handleToggleTextMode = () => {
 		$isTextMode = !$isTextMode;
 		handleRegenerate();
-	};
-	const handleToggleExplorerMode = () => {
-		$isExplorerMode = !$isExplorerMode;
-		$minotaurPosition = $minotaurStartingPosition;
-		$theseusPosition = { x: 0, y: 0 };
 	};
 	const toggleText = (on: boolean, mode: string) => `${on ? 'Exit' : 'Enter'} ${mode} Mode`;
 </script>
@@ -51,7 +55,12 @@
 			{#if $stopGame}
 				<span class="caught">Game over!</span>
 			{:else}
-				<span>Escape the maze and avoid the minotaur!</span>
+				<div style="display:flex;flex-direction:column;align-items:flex-start">
+					<span>Escape the maze and avoid the minotaur!</span>
+					<button class="link-button" on:click={disableMinotaur}
+						>Don't have a cowman (i.e., turn off minotaur)</button
+					>
+				</div>
 			{/if}
 		{:else}
 			<span>
@@ -168,5 +177,15 @@
 	}
 	.dimensions {
 		white-space: nowrap;
+	}
+	.link-button {
+		background: none;
+		border: none;
+		color: blueviolet;
+		cursor: pointer;
+		font-size: inherit;
+		padding: 0;
+		text-decoration: underline;
+		font-size: x-small;
 	}
 </style>

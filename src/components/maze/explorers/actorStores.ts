@@ -8,6 +8,7 @@ export const theseusIndex = derived(
 	([$theseusPosition, $dimensions]) => $theseusPosition.y * $dimensions.width + $theseusPosition.x,
 );
 
+export const minotaurDisabled = writable(false);
 export const minotaurStartingPosition = derived(dimensions, ($dimensions) => ({
 	x: $dimensions.width - 1,
 	y: $dimensions.height - 1,
@@ -37,7 +38,6 @@ export const caughtByMinotaur = derived(
 			{ x: mX, y: mY + 1, direction: 'bottom' },
 			{ x: mX - 1, y: mY, direction: 'left' },
 		];
-		console.log({ adjacentCells, $theseusPosition });
 		for (const cell of adjacentCells) {
 			const { x, y, direction } = cell;
 			if (x === tX && y === tY && get(grid)[mY][mX][direction]) {
