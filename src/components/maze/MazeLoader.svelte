@@ -6,6 +6,7 @@
 		grid,
 		moveDirection,
 		isExplorerMode,
+		mazeRef,
 	} from '../../stores';
 	import { onMount } from 'svelte';
 	import Maze from './Maze.svelte';
@@ -34,6 +35,7 @@
 	let main: HTMLElement;
 	$: {
 		if (main && $isExplorerMode) {
+			$mazeRef = main;
 			main.focus();
 		}
 	}

@@ -6,6 +6,7 @@
 		shareURL,
 		isExplorerMode,
 		controlsDisabled,
+		mazeRef,
 	} from '../../stores';
 	import {
 		minotaurPosition,
@@ -26,12 +27,13 @@
 		$minotaurPosition = $minotaurStartingPosition;
 		$theseusPosition = { x: 0, y: 0 };
 		$minotaurDisabled = false;
+		$mazeRef?.focus();
 	};
 	const handleToggleExplorerMode = () => {
 		$isExplorerMode = !$isExplorerMode;
 		resetExplorerMode();
 	};
-	const disableMinotaur = () => ($minotaurDisabled = true);
+	const disableMinotaur = () => (($minotaurDisabled = true), $mazeRef?.focus());
 
 	const handleCopyShareURL = () => navigator.clipboard.writeText($shareURL);
 	const handlePrint = () => window.print();
@@ -52,16 +54,19 @@
 		{#if $isTextMode}
 			<label for="text">Enter maze text: </label>
 		{:else if $isExplorerMode}
-			{#if $stopGame}
-				<span class="caught">Game over!</span>
-			{:else}
-				<div style="display:flex;flex-direction:column;align-items:flex-start">
+			<div style="display:flex;flex-direction:column;align-items:flex-start">
+				{#if $stopGame}
+					<span>Game over!</span>
+				{:else}
 					<span>Escape the maze and avoid the minotaur!</span>
-					<button class="link-button" on:click={disableMinotaur}
-						>Don't have a cowman (i.e., turn off minotaur)</button
-					>
-				</div>
-			{/if}
+				{/if}
+				<button
+					class="link-button"
+					on:click={disableMinotaur}
+					style={$stopGame ? 'visibility: hidden' : ''}
+					>Don't have a cowman (i.e., turn off minotaur)</button
+				>
+			</div>
 		{:else}
 			<span>
 				Maze dimensions:
