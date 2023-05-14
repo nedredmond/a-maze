@@ -20,7 +20,7 @@
 	$: escaped = $theseusIndex === $area - 1;
 	$: $stopGame = gameOver || escaped;
 
-	$: showMinotaur = !$minotaurDisabled && !$stopGame && !escaped && !(index === $theseusIndex);
+	$: showMinotaur = !$minotaurDisabled && !escaped && !(index === $theseusIndex);
 </script>
 
 {#if $theseusIndex === index}
