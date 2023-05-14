@@ -2,24 +2,31 @@
 	import Controls from '../components/controls/Controls.svelte';
 	import Qr from '../components/qr/QR.svelte';
 	import Maze from '../components/maze/MazeLoader.svelte';
-	import { orientation, swipeDirection } from '../stores';
+	import { isExplorerMode, orientation, moveDirection } from '../stores';
+	import { stopGame } from '../components/maze/explorers/actorStores';
 
 	import { swipe } from 'svelte-gestures';
 	import type { Direction } from '../types';
 
-	const swipeHandler = (
+	const onSwipe = (
 		e: CustomEvent<{
 			direction: Direction;
-			target: EventTarget;
 		}>,
-	) => ($swipeDirection = e.detail.direction);
+	) => ($moveDirection = e.detail.direction);
+
+	$: allowInput = !$stopGame && $isExplorerMode;
 </script>
 
 <svelte:head>
 	<title>A Maze</title>
 </svelte:head>
 
-<div class="container" style:--page-orientation={$orientation} use:swipe on:swipe={swipeHandler}>
+<div
+	class="container"
+	style:--page-orientation={$orientation}
+	use:swipe
+	on:swipe={(e) => allowInput && onSwipe(e)}
+>
 	<Controls />
 	<Maze />
 	<Qr />
@@ -37,6 +44,7 @@
 	.container {
 		width: 90vw;
 		max-width: 666px;
+		height: 90vh;
 		box-sizing: border-box;
 		margin: auto;
 		display: flex;

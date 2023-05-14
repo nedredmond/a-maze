@@ -1,21 +1,21 @@
 <script lang="ts">
 	import Actor from './ActorTemplate.svelte';
-	import { area, swipeDirection } from '../../../stores';
-	import { getExpression, restingExpression, KeyDirection, updatePosition } from './utils';
+	import { moveDirection } from '../../../stores';
+	import { getExpression, restingExpression } from './utils';
 	import type { Cell, Direction } from '../../../types';
 	import { createEventDispatcher } from 'svelte';
-	import { theseusIndex, theseusPosition } from './actorStores';
+	import { theseusPosition } from './actorStores';
 
 	export const dispatch = createEventDispatcher();
-	export let dead = false;
+	export let escaped = false;
+	export let gameOver = false;
 
-	const escaped = $theseusIndex === $area - 1;
 	let idle = false;
-	const resetExpression = () => restingExpression({ idle, escaped, dead });
+	const resetExpression = () => restingExpression({ idle, escaped, gameOver });
 
 	let theseus = resetExpression();
-	const init = (el: HTMLDivElement) => {
-		el.focus();
+	const init = (_: HTMLDivElement) => {
+		if (escaped || gameOver) return;
 		setTimeout(() => {
 			idle = true;
 			theseus = resetExpression();
@@ -50,10 +50,9 @@
 	};
 
 	export let cell: Cell;
-	$: move($swipeDirection);
-	const move = (direction: Direction) => {
-		if (dead) return;
-		dispatch('move', {});
+	$: move($moveDirection);
+	const move = (direction: Direction | null) => {
+		if (gameOver || escaped) return;
 		switch (true) {
 			case !direction:
 				return;
@@ -69,19 +68,14 @@
 			case direction === 'right' && cell.right:
 				$theseusPosition.x++;
 				break;
-			case escaped && direction === 'right':
-				theseus = getExpression('escaped');
-				break;
 			default:
-				onBump(direction);
+				onBump(direction!);
 		}
-		if ($swipeDirection) $swipeDirection = null;
+		dispatch('moved', 'theseus');
 	};
-	const onKeyDown = ({ key }: KeyboardEvent) => move(KeyDirection[key]);
 </script>
 
-<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
-<div use:init tabindex="0" on:keydown|preventDefault={onKeyDown} class={getClass(bumpedH, bumpedV)}>
+<div use:init class={getClass(bumpedH, bumpedV)}>
 	<Actor actor={theseus} key="theseus" />
 </div>
 
