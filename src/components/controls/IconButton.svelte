@@ -22,7 +22,7 @@
 <style>
 	.button {
 		display: flex;
-		width: 1.125em;
+		width: 24px;
 		background: none;
 		color: inherit;
 		border: none;
