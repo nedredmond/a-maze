@@ -21,7 +21,7 @@
 	import PrintSvg from './svg/PrintSVG.svelte';
 	import RefreshSvg from './svg/RefreshSVG.svelte';
 	import CopySvg from './svg/CopySVG.svelte';
-	import MapSvg from './svg/MapSVG.svelte';
+	import GameSvg from './svg/GameSVG.svelte';
 
 	const resetExplorerMode = () => {
 		$minotaurPosition = $minotaurStartingPosition;
@@ -85,34 +85,30 @@
 				title={toggleText($isExplorerMode, 'Explorer')}
 				active={$isExplorerMode}
 			>
-				<MapSvg />
+				<GameSvg />
 			</IconButton>
-			<IconButton
-				fn={handleToggleTextMode}
-				role="switch"
-				aria-checked={$isTextMode}
-				title={toggleText($isTextMode, 'Text')}
-				active={$isTextMode}
-				disabled={$isExplorerMode}
-			>
-				<TextModeSvg />
-			</IconButton>
-			{#if $isTextMode}
+			{#if !$isExplorerMode}
 				<IconButton
-					fn={handleCopyShareURL}
-					title="Copy Link to Text Maze"
-					disabled={$isExplorerMode}
+					fn={handleToggleTextMode}
+					role="switch"
+					aria-checked={$isTextMode}
+					title={toggleText($isTextMode, 'Text')}
+					active={$isTextMode}
 				>
-					<CopySvg />
+					<TextModeSvg />
+				</IconButton>
+				{#if $isTextMode}
+					<IconButton fn={handleCopyShareURL} title="Copy Link to Text Maze">
+						<CopySvg />
+					</IconButton>
+				{/if}
+				<IconButton fn={handlePrint} title="Print or Download Maze">
+					<PrintSvg />
 				</IconButton>
 			{/if}
-			<IconButton fn={handlePrint} title="Print or Download Maze" disabled={$isExplorerMode}>
-				<PrintSvg />
-			</IconButton>
 			<IconButton
 				fn={handleRegenerate}
 				title={$isExplorerMode ? 'Try Again?' : 'Regenerate Maze'}
-				disabled={$isExplorerMode && !$stopGame}
 			>
 				<RefreshSvg />
 			</IconButton>

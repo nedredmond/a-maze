@@ -7,7 +7,7 @@ export const mazeRef = writable<HTMLElement | null>(null);
 export const moveDirection = writable<Direction | null>(null);
 
 export const grid = writable<Cell[][]>([]);
-export const dimensions = writable<Dimensions>({ height: 20, width: 20 });
+export const dimensions = writable<Dimensions>({ height: 9, width: 16 });
 export const area = derived(
 	dimensions,
 	($dimensions: Dimensions) => $dimensions.height * $dimensions.width,
