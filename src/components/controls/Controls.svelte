@@ -51,8 +51,8 @@
 
 <div id="controls" class="controls outer">
 	<div class="row">
-		{#if $isExplorerMode}
-			<div style="display:flex;flex-direction:column;align-items:flex-start">
+		<div class="instructions">
+			{#if $isExplorerMode}
 				{#if $stopGame}
 					<span>Game over!</span>
 				{:else}
@@ -64,19 +64,19 @@
 					style={$stopGame || $minotaurDisabled ? 'visibility: hidden' : ''}
 					>Don't have a cowman (i.e., turn off minotaur)</button
 				>
-			</div>
-		{:else if $isTextMode}
-			<label for="text">Enter maze text: </label>
-		{:else}
-			<span>
-				Maze dimensions:
-				<span class="dimensions">
-					<output for="width">{$dimensions.width}</output>
-					×
-					<output for="height">{$dimensions.height}</output>
+			{:else if $isTextMode}
+				<label for="text">Enter maze text: </label>
+			{:else}
+				<span>
+					Maze dimensions:
+					<span class="dimensions">
+						<output for="width">{$dimensions.width}</output>
+						×
+						<output for="height">{$dimensions.height}</output>
+					</span>
 				</span>
-			</span>
-		{/if}
+			{/if}
+		</div>
 		<nav class="buttons">
 			<IconButton
 				fn={handleToggleExplorerMode}
@@ -106,10 +106,7 @@
 					<PrintSvg />
 				</IconButton>
 			{/if}
-			<IconButton
-				fn={handleRegenerate}
-				title={$isExplorerMode ? 'Try Again?' : 'Regenerate Maze'}
-			>
+			<IconButton fn={handleRegenerate} title={$isExplorerMode ? 'Try Again?' : 'Regenerate Maze'}>
 				<RefreshSvg />
 			</IconButton>
 		</nav>
@@ -169,12 +166,19 @@
 		gap: 1em;
 		justify-content: space-between;
 	}
+	.instructions {
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+		justify-content: flex-end;
+		font-size: larger;
+	}
 	.buttons {
 		display: flex;
 		align-items: stretch;
 		gap: 1.25em;
 		justify-content: flex-end;
-		flex-wrap: wrap;
+		flex-shrink: 0;
 	}
 	.dimensions {
 		white-space: nowrap;
