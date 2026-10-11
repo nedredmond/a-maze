@@ -4,36 +4,36 @@ on:
   push:
     branches: 'main'
 
+# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
 jobs:
   build_site:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
-      - name: Install pnpm
-        uses: pnpm/action-setup@v2
+      - uses: pnpm/setup@v1
         with:
-          version: 8
-
-      - name: Install Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18
-          cache: pnpm
-
-      - name: Install dependencies
-        run: pnpm install
+          version: 11
+          runtime: node@22
+          cache: true
 
       - name: build
-        env:
-          BASE_PATH: '/your-repo-name'
         run: |
           pnpm run build
           touch build/.nojekyll
 
       - name: Upload Artifacts
-        uses: actions/upload-pages-artifact@v1
+        uses: actions/upload-pages-artifact@v3
         with:
           # this should match the `pages` option in your adapter-static options
           path: 'build/'
@@ -42,15 +42,11 @@ jobs:
     needs: build_site
     runs-on: ubuntu-latest
 
-    permissions:
-      pages: write
-      id-token: write
-
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
 
     steps:
-      - name: Deploy
+      - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v1
+        uses: actions/deploy-pages@v5
