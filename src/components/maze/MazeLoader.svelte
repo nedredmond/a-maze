@@ -76,6 +76,6 @@
 		display: grid;
 		grid-template-columns: repeat(var(--maze-size), 1fr);
 		gap: 0px;
-		border: 1px solid black;
+		border: 1px solid var(--foreground);
 	}
 </style>

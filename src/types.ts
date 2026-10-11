@@ -37,4 +37,4 @@ export type TextMazeInput = {
 	dimensions: Dimensions;
 };
 
-export type Fill = 'black' | 'white' | null;
+export type Fill = 'var(--foreground)' | 'var(--background)' | null;

@@ -32,10 +32,10 @@
 		outline: inherit;
 	}
 	.button:focus {
-		outline: 1px solid blueviolet;
+		outline: 1px solid var(--accent);
 	}
 	.active {
-		color: blueviolet;
+		color: var(--accent);
 	}
 	.disabled {
 		color: gray;

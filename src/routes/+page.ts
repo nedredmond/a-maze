@@ -1,7 +1,8 @@
 export const ssr = false;
 import { isTextMode, text } from '../stores.js';
+import type { PageLoad } from './$types.js';
 
-export function load({ url }) {
+export const load: PageLoad = ({ url }) => {
 	const textParam = url.searchParams.get('text');
 	if (textParam) {
 		isTextMode.set(true);

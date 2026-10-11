@@ -154,10 +154,10 @@
 	.controls {
 		display: flex;
 		flex-direction: column;
-		gap: 0.125em;
 		justify-content: space-between;
 	}
 	.outer {
+		gap: 0.25em;
 		height: fit-content;
 	}
 	.row {
@@ -165,6 +165,9 @@
 		align-items: stretch;
 		gap: 1em;
 		justify-content: space-between;
+	}
+	.slider {
+		min-block-size: 24px;
 	}
 	.instructions {
 		display: flex;
@@ -186,11 +189,14 @@
 	.link-button {
 		background: none;
 		border: none;
-		color: blueviolet;
+		color: var(--accent);
 		cursor: pointer;
-		font-size: inherit;
 		padding: 0;
+		min-block-size: 24px;
 		text-decoration: underline;
-		font-size: x-small;
+		font-size: small;
+	}
+	#text {
+		resize: vertical;
 	}
 </style>

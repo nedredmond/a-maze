@@ -13,7 +13,7 @@ const strokeCell: Cell = {
 	bottom: true,
 	right: true,
 	left: true,
-	fill: 'black',
+	fill: 'var(--foreground)',
 	x: 0,
 	y: 0,
 };
@@ -22,7 +22,7 @@ const fillCell: Cell = {
 	bottom: true,
 	right: true,
 	left: true,
-	fill: 'white',
+	fill: 'var(--background)',
 	x: 0,
 	y: 0,
 };

@@ -33,6 +33,24 @@
 </div>
 
 <style>
+	:root {
+		--background: white;
+		--foreground: black;
+		--accent: blueviolet;
+	}
+	@media (prefers-color-scheme: dark) {
+		:global(body) {
+		--background: black;
+		--foreground: white;
+		--accent: mediumorchid;
+		}
+	}
+	:global(body) {
+		font-family: sans-serif;
+		accent-color: var(--accent);
+		background: var(--background);
+		color: var(--foreground);
+	}
 	@media print {
 		@page {
 			size: var(--page-orientation);
@@ -50,9 +68,5 @@
 		display: flex;
 		flex-direction: column;
 		gap: 0.5em;
-	}
-	:global(body) {
-		font-family: sans-serif;
-		accent-color: blueviolet;
 	}
 </style>
