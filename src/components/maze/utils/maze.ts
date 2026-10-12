@@ -49,7 +49,7 @@ function initializeMaze(dimensions: Dimensions): Maze {
 	};
 }
 
-function initializeMazeFromText({ dimensions, lines }: TextMazeInput): Maze {
+function initializeMazeFromText({ lines, ...dimensions }: TextMazeInput): Maze {
 	const grid = initializeMaze(dimensions).grid;
 
 	const yStart = PADDING;

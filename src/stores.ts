@@ -27,7 +27,7 @@ export const textMazeInput = derived<Writable<string>, TextMazeInput>(text, ($te
 	isTextMode.subscribe((mode) => mode && dimensions.set(textMazeDimensions));
 	return {
 		lines,
-		dimensions: textMazeDimensions,
+		...textMazeDimensions,
 	};
 });
 

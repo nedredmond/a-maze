@@ -32,9 +32,8 @@ export interface Position {
 
 export type MazeInput = Dimensions | TextMazeInput;
 
-export type TextMazeInput = {
+export interface TextMazeInput extends Dimensions {
 	lines: string[];
-	dimensions: Dimensions;
 };
 
 export type Fill = 'var(--foreground)' | 'var(--background)' | null;
