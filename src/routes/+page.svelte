@@ -1,12 +1,22 @@
 <script lang="ts">
+	import { page } from '$app/stores';
+
 	import Controls from '../components/controls/Controls.svelte';
 	import Qr from '../components/qr/QR.svelte';
 	import Maze from '../components/maze/MazeLoader.svelte';
-	import { isExplorerMode, orientation, moveDirection } from '../stores';
+	import { isExplorerMode, orientation, moveDirection, text, isTextMode } from '../stores';
 	import { stopGame } from '../components/maze/explorers/actorStores';
 
 	import { swipe } from 'svelte-gestures';
 	import type { Direction } from '../types';
+
+	$: {
+		const textParam = $page.url.searchParams.get('text');
+		if (textParam) {
+			$isTextMode = true;
+			$text = textParam;
+		}
+	}
 
 	const onSwipe = (
 		e: CustomEvent<{
