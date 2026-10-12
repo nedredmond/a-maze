@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { afterNavigate } from '$app/navigation';
 	import { page } from '$app/stores';
 
 	import Controls from '../components/controls/Controls.svelte';
@@ -10,13 +11,13 @@
 	import { swipe } from 'svelte-gestures';
 	import type { Direction } from '../types';
 
-	$: {
+	afterNavigate(() => {
 		const textParam = $page.url.searchParams.get('text');
 		if (textParam) {
 			$isTextMode = true;
 			$text = textParam;
 		}
-	}
+	});
 
 	const onSwipe = (
 		e: CustomEvent<{
