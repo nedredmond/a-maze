@@ -36,9 +36,9 @@ export default defineConfig({
 				name: 'A Maze',
 				short_name: 'A Maze',
 				icons: [
-					{ src: 'assets/pwa-192x192.png', sizes: '192x192', type: 'image/png' },
-					{ src: 'assets/pwa-512x512.png', sizes: '512x512', type: 'image/png' },
-					{ src: 'assets/maskable-icon-512x512.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' },
+					{ src: '/pwa-192x192.png', sizes: '192x192', type: 'image/png' },
+					{ src: '/pwa-512x512.png', sizes: '512x512', type: 'image/png' },
+					{ src: '/maskable-icon-512x512.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' },
 				],
 			},
 		})
