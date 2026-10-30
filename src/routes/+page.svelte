@@ -8,8 +8,7 @@
 	import { isExplorerMode, orientation, moveDirection, text, isTextMode } from '../stores';
 	import { stopGame } from '../components/maze/explorers/actorStores';
 
-	import { swipe } from 'svelte-gestures';
-	import type { Direction } from '../types';
+	import { useSwipe, type SwipeCustomEvent } from 'svelte-gestures';
 
 	afterNavigate(() => {
 		const textParam = $page.url.searchParams.get('text');
@@ -19,11 +18,7 @@
 		}
 	});
 
-	const onSwipe = (
-		e: CustomEvent<{
-			direction: Direction;
-		}>,
-	) => ($moveDirection = e.detail.direction);
+	const onSwipe = (e: SwipeCustomEvent) => ($moveDirection = e.detail.direction);
 
 	$: allowInput = !$stopGame && $isExplorerMode;
 </script>
@@ -35,8 +30,7 @@
 <div
 	class="container"
 	style:--page-orientation={$orientation}
-	use:swipe
-	on:swipe={(e) => allowInput && onSwipe(e)}
+	{...useSwipe((e) => allowInput && onSwipe(e))}
 >
 	<Controls />
 	<Maze />

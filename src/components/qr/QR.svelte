@@ -17,7 +17,7 @@
 	}
 </script>
 
-<canvas bind:this={canvas} id="qrcode" width={32} height={32} />
+<canvas bind:this={canvas} id="qrcode" width={32} height={32}></canvas>
 
 <style>
 	@media print {

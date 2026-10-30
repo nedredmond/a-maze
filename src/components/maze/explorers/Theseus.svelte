@@ -118,7 +118,9 @@
 	@keyframes bumpV {
 		5%,
 		95% {
-			transform: 0, -1px;
+			transform:
+				0,
+				-1px;
 		}
 
 		10%,

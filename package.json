@@ -9,17 +9,17 @@
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
 		"test": "vitest",
-		"lint": "pnpm format && prettier --plugin-search-dir . --check . && eslint . --fix",
-		"format": "prettier --plugin-search-dir . --write ."
+		"lint": "pnpm format && prettier --check . && eslint . --fix",
+		"format": "prettier --write ."
 	},
 	"dependencies": {
 		"qrcode": "^1.5.3",
-		"svelte-gestures": "^4.0.0"
+		"svelte-gestures": "^5.2.2"
 	},
 	"devDependencies": {
 		"@sveltejs/adapter-static": "^4.0.0",
 		"@sveltejs/kit": "^2.70.3",
-		"@sveltejs/vite-plugin-svelte": "^3",
+		"@sveltejs/vite-plugin-svelte": "^4.0.4",
 		"@types/node": "^20.1.0",
 		"@types/qrcode": "^1.5.0",
 		"@typescript-eslint/eslint-plugin": "^5.45.0",
@@ -27,10 +27,10 @@
 		"eslint": "^8.28.0",
 		"eslint-config-prettier": "^8.5.0",
 		"eslint-plugin-svelte": "^2.30.0",
-		"prettier": "^2.8.0",
-		"prettier-plugin-svelte": "^2.10.1",
-		"svelte": "^4.0.0",
-		"svelte-check": "^3.4.3",
+		"prettier": "^3.9.10",
+		"prettier-plugin-svelte": "^4.1.1",
+		"svelte": "^5.57.3",
+		"svelte-check": "^4.7.7",
 		"tslib": "^2.4.1",
 		"typescript": "^5.0.0",
 		"vite": "^5.4.21",

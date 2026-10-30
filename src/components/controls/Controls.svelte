@@ -113,7 +113,7 @@
 	</div>
 	{#if !$isExplorerMode}
 		{#if $isTextMode}
-			<textarea bind:value={$text} rows="2" cols="30" aria-label="maze text" id="text" />
+			<textarea bind:value={$text} rows="2" cols="30" aria-label="maze text" id="text"></textarea>
 		{:else}
 			<div class="controls">
 				<input

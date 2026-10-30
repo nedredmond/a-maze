@@ -5,7 +5,7 @@
 </script>
 
 {#each { length: $area } as _}
-	<div class="loading-cell" />
+	<div class="loading-cell"></div>
 {/each}
 
 <style>

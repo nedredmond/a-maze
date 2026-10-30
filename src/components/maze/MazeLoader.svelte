@@ -24,7 +24,9 @@
 		new Promise<MazeOutput>((resolve, reject) => {
 			const brickRoad = new Worker.default();
 			brickRoad.onmessage = ({ data }) => (
-				grid.set(data.grid), resolve(data), brickRoad.terminate()
+				grid.set(data.grid),
+				resolve(data),
+				brickRoad.terminate()
 			);
 			brickRoad.onerror = (error) => (reject(error), brickRoad.terminate());
 			brickRoad.postMessage(input);
