@@ -12,9 +12,7 @@
 		updateQrCode = (text: string) => QRCode.toCanvas(canvas, text);
 	});
 
-	$: {
-		updateQrCode instanceof Function && updateQrCode($shareURL);
-	}
+	$: updateQrCode?.($shareURL);
 </script>
 
 <canvas bind:this={canvas} id="qrcode" width={32} height={32}></canvas>

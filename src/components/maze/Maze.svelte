@@ -34,7 +34,7 @@
 	};
 </script>
 
-{#each maze.cells as cell, index}
+{#each maze.cells as cell, index (index)}
 	<Cell {...cell} egress={egress(index)}>
 		{#if $isExplorerMode}
 			<ActorLocator {index} {cell} on:moved={onMoved} />

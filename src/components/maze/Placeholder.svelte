@@ -4,7 +4,7 @@
 	import { area } from '../../stores';
 </script>
 
-{#each { length: $area } as _}
+{#each { length: $area } as _, index (index)}
 	<div class="loading-cell"></div>
 {/each}
 

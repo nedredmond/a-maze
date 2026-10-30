@@ -27,7 +27,7 @@
 	`;
 </script>
 
-<div {style} class={'cell'}>
+<div {style} class="cell">
 	{#if egress}
 		<div class="portal {egress}">
 			<GateSvg />

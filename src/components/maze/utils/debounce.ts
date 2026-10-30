@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 export const debouncePromise = <F extends (...args: Parameters<F>) => ReturnType<F>>(
 	func: F,
 	waitFor: number,
