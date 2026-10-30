@@ -32,11 +32,11 @@
 
 	const getMaze = debouncePromise<typeof buildMaze>(buildMaze, 100);
 
-	let main: HTMLElement;
+	let maze: HTMLElement;
 	$: {
-		if (main && $isExplorerMode) {
-			$mazeRef = main;
-			main.focus();
+		if (maze && $isExplorerMode) {
+			$mazeRef = maze;
+			maze.focus();
 		}
 	}
 
@@ -49,26 +49,28 @@
 	$: allowInput = $isExplorerMode && !$stopGame;
 </script>
 
-<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
-<main
-	bind:this={main}
-	id="maze"
-	class="maze"
-	style:--maze-size={$dimensions.width}
-	tabindex="0"
-	on:keydown|preventDefault={(e) => allowInput && !e.repeat && onKeydown(e)}
->
-	{#if Worker}
-		{#await getMaze($isTextMode ? $textMazeInput : $dimensions)}
+<main>
+	<div
+		role="grid"
+		bind:this={maze}
+		id="maze"
+		class="maze"
+		style:--maze-size={$dimensions.width}
+		tabindex="0"
+		on:keydown|preventDefault={(e) => allowInput && !e.repeat && onKeydown(e)}
+	>
+		{#if Worker}
+			{#await getMaze($isTextMode ? $textMazeInput : $dimensions)}
+				<Placeholder />
+			{:then maze}
+				<Maze {maze} />
+			{:catch e}
+				<p>{e.message}</p>
+			{/await}
+		{:else}
 			<Placeholder />
-		{:then maze}
-			<Maze {maze} />
-		{:catch e}
-			<p>{e.message}</p>
-		{/await}
-	{:else}
-		<Placeholder />
-	{/if}
+		{/if}
+	</div>
 </main>
 
 <style>

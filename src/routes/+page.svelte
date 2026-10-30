@@ -51,9 +51,9 @@
 	}
 	@media (prefers-color-scheme: dark) {
 		:global(body) {
-		--background: black;
-		--foreground: white;
-		--accent: mediumorchid;
+			--background: black;
+			--foreground: white;
+			--accent: mediumorchid;
 		}
 	}
 	:global(body) {

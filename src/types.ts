@@ -34,6 +34,6 @@ export type MazeInput = Dimensions | TextMazeInput;
 
 export interface TextMazeInput extends Dimensions {
 	lines: string[];
-};
+}
 
 export type Fill = 'var(--foreground)' | 'var(--background)' | null;

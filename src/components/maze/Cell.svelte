@@ -9,10 +9,10 @@
 		bottom = false,
 		right = false,
 		left = false,
-		fill: Fill = null,
-		visited: false,
-		x: null,
-		y: null;
+		fill: Fill = null;
+	export const visited = false,
+		x = null,
+		y = null;
 
 	export let egress: 'entrance' | 'exit' | null = null;
 
