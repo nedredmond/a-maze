@@ -10,6 +10,7 @@ export default defineConfig({
 		'import.meta.vitest': 'undefined',
 	},
 	test: {
-		include: ['src/**/*.{test,spec}.{js,ts}', 'src/utils/**/*.{js,ts}'],
+		include: ['src/**/*.{test,spec}.{js,ts}'],
+		includeSource: ['src/**/*.{js,ts}'],
 	},
 });
