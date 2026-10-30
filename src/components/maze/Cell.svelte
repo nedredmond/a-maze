@@ -1,18 +1,18 @@
 <svelte:options immutable />
 
 <script lang="ts">
-	import type { Fill } from '../../types';
+	import type { Cell } from '../../types';
 	import GateSvg from './svg/GateSVG.svelte';
 
 	// false means there is a border
-	export let top = false,
-		bottom = false,
-		right = false,
-		left = false,
-		fill: Fill = null;
-	export const visited = false,
-		x = null,
-		y = null;
+	export let top: Cell['top'] = false,
+		bottom: Cell['bottom'] = false,
+		right: Cell['right'] = false,
+		left: Cell['left'] = false,
+		fill: Cell['fill'] = null;
+	export const visited: Cell['visited'] = false,
+		x: Cell['x'] = 0,
+		y: Cell['y'] = 0;
 
 	export let egress: 'entrance' | 'exit' | null = null;
 

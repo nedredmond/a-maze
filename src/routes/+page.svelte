@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { afterNavigate } from '$app/navigation';
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 
 	import Controls from '../components/controls/Controls.svelte';
 	import Qr from '../components/qr/QR.svelte';
@@ -13,7 +13,7 @@
 	afterNavigate(({ shallow, type }) => {
 		if (shallow && type === 'goto') return;
 
-		const textParam = $page.url.searchParams.get('text');
+		const textParam = page.url.searchParams.get('text');
 		if (textParam) {
 			$isTextMode = true;
 			$text = textParam;
