@@ -22,7 +22,7 @@ importers:
         specifier: ^2.0.2
         version: 2.0.3(@sveltejs/kit@1.30.4(supports-color@7.2.0)(svelte@4.2.20)(vite@4.5.14(@types/node@20.19.43)(lightningcss@1.33.0)))
       '@sveltejs/kit':
-        specifier: ^1.20.4
+        specifier: ^1.30.4
         version: 1.30.4(supports-color@7.2.0)(svelte@4.2.20)(vite@4.5.14(@types/node@20.19.43)(lightningcss@1.33.0))
       '@types/node':
         specifier: ^20.1.0
