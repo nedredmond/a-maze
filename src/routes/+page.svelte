@@ -51,12 +51,12 @@
 <style>
 	:root {
 		--background: white;
-		--foreground: black;
+		--foreground: #16161d;
 		--accent: blueviolet;
 	}
 	@media (prefers-color-scheme: dark) {
 		:global(body) {
-			--background: black;
+			--background: #16161d;
 			--foreground: white;
 			--accent: mediumorchid;
 		}
