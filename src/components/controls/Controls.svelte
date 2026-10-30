@@ -1,13 +1,14 @@
 <script lang="ts">
+	import { page } from '$app/state';
 	import {
 		dimensions,
 		isTextMode,
 		text,
-		shareURL,
 		isExplorerMode,
 		controlsDisabled,
 		mazeRef,
 	} from '../../stores';
+	import { buildShareUrl } from '../utils.ts';
 	import {
 		minotaurPosition,
 		minotaurStartingPosition,
@@ -35,7 +36,8 @@
 	};
 	const disableMinotaur = () => (($minotaurDisabled = true), $mazeRef?.focus());
 
-	const handleCopyShareURL = () => navigator.clipboard.writeText($shareURL);
+	const shareUrl = $derived(buildShareUrl(page.url, $isTextMode, $text));
+	const handleCopyShareUrl = () => navigator.clipboard.writeText(shareUrl);
 	const handlePrint = () => window.print();
 	const handleRegenerate = () => {
 		if ($isExplorerMode) resetExplorerMode();
@@ -60,7 +62,7 @@
 				{/if}
 				<button
 					class="link-button"
-					on:click={disableMinotaur}
+					onclick={disableMinotaur}
 					style={$stopGame || $minotaurDisabled ? 'visibility: hidden' : ''}
 					>Don't have a cowman (i.e., turn off minotaur)</button
 				>
@@ -98,7 +100,7 @@
 					<TextModeSvg />
 				</IconButton>
 				{#if $isTextMode}
-					<IconButton fn={handleCopyShareURL} title="Copy Link to Text Maze">
+					<IconButton fn={handleCopyShareUrl} title="Copy Link to Text Maze">
 						<CopySvg />
 					</IconButton>
 				{/if}

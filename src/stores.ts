@@ -1,7 +1,6 @@
 import { derived, writable, type Writable } from 'svelte/store';
 import { getLines, getTextMazeDimensions } from './components/maze/utils/maze';
 import type { Cell, Dimensions, Direction, TextMazeInput } from './types';
-import { page } from '$app/stores';
 
 export const mazeRef = writable<HTMLElement | null>(null);
 export const moveDirection = writable<Direction | null>(null);
@@ -29,11 +28,6 @@ export const textMazeInput = derived<Writable<string>, TextMazeInput>(text, ($te
 		lines,
 		...textMazeDimensions,
 	};
-});
-
-export const shareURL = derived([page, isTextMode, text], ([$page, $textMode, $text]) => {
-	const url = $page.url.origin + $page.url.pathname;
-	return $textMode ? `${url}?text=${encodeURIComponent($text)}` : url;
 });
 
 export const controlsDisabled = derived(isExplorerMode, ($isExplorerMode) => !$isExplorerMode);

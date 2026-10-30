@@ -10,7 +10,9 @@
 
 	import { useSwipe, type SwipeCustomEvent } from 'svelte-gestures';
 
-	afterNavigate(() => {
+	afterNavigate(({ shallow, type }) => {
+		if (shallow && type === 'goto') return;
+
 		const textParam = $page.url.searchParams.get('text');
 		if (textParam) {
 			$isTextMode = true;
@@ -23,9 +25,8 @@
 	$: allowInput = !$stopGame && $isExplorerMode;
 </script>
 
-<svelte:head>
-	<title>A Maze</title>
-</svelte:head>
+<!-- @migration-task could not auto-migrate `$app/stores` to `$app/state`: legacy reactive statement (`$:`); migrate manually -->
+<svelte:head><title>A Maze</title></svelte:head>
 
 <div
 	class="container"

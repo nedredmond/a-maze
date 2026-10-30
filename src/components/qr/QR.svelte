@@ -1,18 +1,15 @@
-<svelte:options immutable />
-
 <script lang="ts">
-	import { shareURL } from '../../stores';
+	import { page } from '$app/state';
 	import QRCode from 'qrcode';
-	import { onMount } from 'svelte';
+	import { buildShareUrl } from '../utils';
+	import { isTextMode, text } from '../../stores';
 
-	let canvas: HTMLCanvasElement;
-	let updateQrCode: (text: string) => void;
+	let canvas = $state<HTMLCanvasElement>();
 
-	onMount(() => {
-		updateQrCode = (text: string) => QRCode.toCanvas(canvas, text);
+	const shareUrl = $derived(buildShareUrl(page.url, $isTextMode, $text));
+	$effect(() => {
+		if (canvas) QRCode.toCanvas(canvas, shareUrl);
 	});
-
-	$: updateQrCode?.($shareURL);
 </script>
 
 <canvas bind:this={canvas} id="qrcode" width={32} height={32}></canvas>
