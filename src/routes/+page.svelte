@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { pwaInfo } from 'virtual:pwa-info';
 	import { afterNavigate } from '$app/navigation';
 	import { page } from '$app/state';
 
@@ -26,7 +27,16 @@
 </script>
 
 <!-- @migration-task could not auto-migrate `$app/stores` to `$app/state`: legacy reactive statement (`$:`); migrate manually -->
-<svelte:head><title>A Maze</title></svelte:head>
+<svelte:head>
+	<title>A Maze</title>
+	{#if pwaInfo}
+		<link
+			rel="manifest"
+			href={pwaInfo.webManifest.href}
+			crossorigin={pwaInfo.webManifest.useCredentials ? 'use-credentials' : undefined}
+		/>
+	{/if}
+</svelte:head>
 
 <div
 	class="container"
